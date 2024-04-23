@@ -1,4 +1,4 @@
-package fr.arks.exiledarkanoid;
+package fr.arks.exiledarkanoid.gameplay;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Texture;

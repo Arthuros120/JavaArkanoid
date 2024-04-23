@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import fr.arks.exiledarkanoid.ExiledArkanoid;
+import fr.arks.exiledarkanoid.gameplay.ExiledArkanoid;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
