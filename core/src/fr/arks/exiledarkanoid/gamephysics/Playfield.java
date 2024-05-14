@@ -23,7 +23,7 @@ public class Playfield {
             int x = (i % 10) * brickWidth;
             int y = size.height - (i / 10) * brickHeight;
 
-            bricks[i] = new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2));
+            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
         }
 
     }
