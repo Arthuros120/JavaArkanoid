@@ -2,7 +2,6 @@ package fr.arks.exiledarkanoid.gameplay.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -33,7 +32,7 @@ public class GameScreen implements Screen {
 
         this.playfield = new Playfield(
                 new Size(ExiledArkanoid.WIDTH, ExiledArkanoid.HEIGHT),
-                30
+                60
         );
     }
 
@@ -60,12 +59,12 @@ public class GameScreen implements Screen {
         camera.update();
 
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
 
-        playfield.render(shapeRenderer);
+        game.batch.begin();
 
-        shapeRenderer.end();
+        playfield.render(game.batch);
+
+        game.batch.end();
     }
 
     @Override

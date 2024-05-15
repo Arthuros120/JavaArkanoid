@@ -1,6 +1,8 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import fr.arks.exiledarkanoid.gamephysics.abstracts.MovingElement;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
@@ -11,8 +13,11 @@ public class Ball extends MovingElement {
 
     public final Circle shape = new Circle(this.position.x, this.position.y, (float) this.size.width / 2);
 
+    private final Texture ball_image;
+
     public Ball(Position position, Size size, Speed speed) {
         super(position, size, speed);
+        ball_image = new Texture(Gdx.files.internal("ball.png"));
     }
 
     public void move() {
@@ -27,8 +32,8 @@ public class Ball extends MovingElement {
     }
 
     @Override
-    public void render(ShapeRenderer shapeRenderer) {
+    public void render(SpriteBatch batch) {
         this.shape.setPosition(this.position.x, this.position.y);
-        shapeRenderer.circle(this.position.x, this.position.y, (float) this.size.width / 2);
+        batch.draw(ball_image, this.position.x, this.position.y, this.size.width, this.size.height);
     }
 }
