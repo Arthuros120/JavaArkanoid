@@ -1,31 +1,47 @@
 package fr.arks.exiledarkanoid.gameplay;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import fr.arks.exiledarkanoid.gameplay.screen.GameScreen;
+import fr.arks.exiledarkanoid.gameplay.screen.LostScreen;
 
-public class ExiledArkanoid extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+public class ExiledArkanoid extends Game {
+	public static final int WIDTH = 400;
+	public static final int HEIGHT = 800;
+
+	public SpriteBatch batch;
+	public GameScreen gameScreen;
+
 	@Override
 	public void create () {
+		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
+		Gdx.graphics.setResizable(true);
+
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		gameScreen = new GameScreen(this);
+		this.setScreen(gameScreen);
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		super.render();
+		if (gameScreen.playfield.isLost()) {
+			this.setScreen(new LostScreen(this));
+		}
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+	}
+
+	public int getWidth() {
+		return WIDTH;
+	}
+
+	public int getHeight() {
+		return HEIGHT;
 	}
 }
