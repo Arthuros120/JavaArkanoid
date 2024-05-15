@@ -1,4 +1,4 @@
-package fr.arks.exiledarkanoid.gamephysics;
+package fr.arks.exiledarkanoid.gamephysics.bases;
 
 public class Speed {
     public int vx;
@@ -7,10 +7,5 @@ public class Speed {
     public Speed(int vx, int vy) {
         this.vx = vx;
         this.vy = vy;
-    }
-
-    public Speed(Speed s) {
-        this.vx = s.vx;
-        this.vy = s.vy;
     }
 }

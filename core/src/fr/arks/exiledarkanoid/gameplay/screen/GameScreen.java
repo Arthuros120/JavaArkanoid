@@ -1,29 +1,25 @@
 package fr.arks.exiledarkanoid.gameplay.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import fr.arks.exiledarkanoid.gamephysics.Brick;
 import fr.arks.exiledarkanoid.gamephysics.Playfield;
-import fr.arks.exiledarkanoid.gamephysics.Size;
+import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gameplay.ExiledArkanoid;
 
 public class GameScreen implements Screen {
 
+    public final Playfield playfield;
     final ExiledArkanoid game;
-    final Playfield playfield;
-
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final ShapeRenderer shapeRenderer;
-
-    Array<Rectangle> bricks;
 
     public GameScreen(final ExiledArkanoid game) {
         this.game = game;
@@ -39,17 +35,6 @@ public class GameScreen implements Screen {
                 new Size(ExiledArkanoid.WIDTH, ExiledArkanoid.HEIGHT),
                 30
         );
-
-        bricks = new Array<Rectangle>();
-
-        for (Brick brick : playfield.getBricks()) {
-            Rectangle rectangle = new Rectangle();
-            rectangle.x = brick.position.x;
-            rectangle.y = brick.position.y;
-            rectangle.width = brick.size.width;
-            rectangle.height = brick.size.height;
-            bricks.add(rectangle);
-        }
     }
 
     @Override
@@ -59,6 +44,16 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        playfield.update();
+
+        if (Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            if (touchPos.x >= (float) playfield.getPlatform().size.width / 2 && touchPos.x <= ExiledArkanoid.WIDTH - (float) playfield.getPlatform().size.width / 2) {
+                playfield.getPlatform().position.x = (int) (touchPos.x - playfield.getPlatform().size.width / 2);
+            }
+        }
 
         ScreenUtils.clear(0, 0, 0, 1);
 
@@ -68,9 +63,7 @@ public class GameScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.WHITE);
 
-        for (Rectangle brick : bricks) {
-            shapeRenderer.rect(brick.x, brick.y, brick.width, brick.height);
-        }
+        playfield.render(shapeRenderer);
 
         shapeRenderer.end();
     }

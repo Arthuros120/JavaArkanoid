@@ -1,4 +1,4 @@
-package fr.arks.exiledarkanoid.gamephysics;
+package fr.arks.exiledarkanoid.gamephysics.bases;
 
 public class Position {
     public int x;
@@ -7,10 +7,5 @@ public class Position {
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
-    }
-
-    public Position(Position p) {
-        this.x = p.x;
-        this.y = p.y;
     }
 }
