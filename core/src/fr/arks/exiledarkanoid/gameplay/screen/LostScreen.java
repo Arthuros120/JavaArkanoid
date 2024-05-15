@@ -15,7 +15,7 @@ public class LostScreen implements Screen {
 
     OrthographicCamera camera;
 
-    public LostScreen(final ExiledArkanoid game){
+    public LostScreen(final ExiledArkanoid game) {
         this.game = game;
 
         camera = new OrthographicCamera();
