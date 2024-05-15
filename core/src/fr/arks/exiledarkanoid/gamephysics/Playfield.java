@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Playfield {
+    private int nbBricks;
     private Size size;
     private Ball ball;
     private Platform platform;
     private ArrayList<Brick> bricks;
 
     public Playfield(Size size, int nbBricks) {
+        this.nbBricks = nbBricks;
         this.size = size;
-        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Size(10, 10), new Speed(2, 2));
+        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Size(10, 10), new Speed(4, 4));
         this.platform = new Platform(new Position(size.width / 2, 50), new Size(80, 20), new Speed(1, 0));
 
         this.bricks = new ArrayList<>();
@@ -50,7 +52,20 @@ public class Playfield {
     }
 
     public void reset() {
+        this.bricks = new ArrayList<>();
+        int brickWidth = size.width / 10;
+        int brickHeight = size.height / 20;
+        for (int i = 0; i < nbBricks; i++) {
+            int x = (i % 10) * brickWidth;
+            int y = size.height - (i / 10) * brickHeight;
 
+            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
+        }
+
+        ball.position.x = size.width / 2;
+        ball.position.y = size.height / 2;
+        ball.speed.vx = 4;
+        ball.speed.vy = 4;
     }
 
     public boolean isLost() {

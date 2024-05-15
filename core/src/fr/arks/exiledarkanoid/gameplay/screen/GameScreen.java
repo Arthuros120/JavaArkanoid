@@ -75,7 +75,9 @@ public class GameScreen implements Screen {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            playfield.getPlatform().position.x = (int) (touchPos.x - playfield.getPlatform().size.width / 2);
+            if (touchPos.x >= (float) playfield.getPlatform().size.width / 2 && touchPos.x <= ExiledArkanoid.WIDTH - (float) playfield.getPlatform().size.width / 2 ) {
+                playfield.getPlatform().position.x = (int) (touchPos.x - playfield.getPlatform().size.width / 2);
+            }
         }
 
         platform.x = playfield.getPlatform().position.x;
