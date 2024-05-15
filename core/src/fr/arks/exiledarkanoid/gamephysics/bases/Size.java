@@ -1,4 +1,4 @@
-package fr.arks.exiledarkanoid.gamephysics;
+package fr.arks.exiledarkanoid.gamephysics.bases;
 
 public class Size {
     public int width;
@@ -7,10 +7,5 @@ public class Size {
     public Size(int width, int height) {
         this.width = width;
         this.height = height;
-    }
-
-    public Size(Size s) {
-        this.width = s.width;
-        this.height = s.height;
     }
 }

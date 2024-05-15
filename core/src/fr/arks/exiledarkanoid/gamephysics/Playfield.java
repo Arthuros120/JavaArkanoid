@@ -1,13 +1,18 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import fr.arks.exiledarkanoid.gamephysics.bases.Position;
+import fr.arks.exiledarkanoid.gamephysics.bases.Size;
+import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Playfield {
-    private int nbBricks;
-    private Size size;
-    private Ball ball;
-    private Platform platform;
+    private final int nbBricks;
+    private final Size size;
+    private final Ball ball;
+    private final Platform platform;
     private ArrayList<Brick> bricks;
 
     public Playfield(Size size, int nbBricks) {
@@ -72,15 +77,15 @@ public class Playfield {
         return ball.position.y < platform.position.y;
     }
 
-    public Ball getBall() {
-        return ball;
-    }
-
     public Platform getPlatform() {
         return platform;
     }
 
-    public ArrayList<Brick> getBricks() {
-        return bricks;
+    public void render(ShapeRenderer shapeRenderer) {
+        ball.render(shapeRenderer);
+        platform.render(shapeRenderer);
+        for (Brick brick : bricks) {
+            brick.render(shapeRenderer);
+        }
     }
 }
