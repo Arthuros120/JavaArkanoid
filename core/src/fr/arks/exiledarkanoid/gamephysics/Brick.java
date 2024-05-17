@@ -22,7 +22,6 @@ public class Brick extends Element {
     @Override
     public void render(SpriteBatch batch) {
         this.shape.setPosition(this.position.x, this.position.y);
-
         batch.draw(block_image, this.position.x, this.position.y, this.size.width, this.size.height);
     }
 

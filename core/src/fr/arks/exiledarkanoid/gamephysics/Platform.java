@@ -17,7 +17,7 @@ public class Platform extends MovingElement {
 
     public Platform(Position position, Size size, Speed speed) {
         super(position, size, speed);
-        platform_image = new Texture(Gdx.files.internal("paddle_94x26.png"));
+        platform_image = new Texture(Gdx.files.internal("paddle.png"));
     }
 
     @Override

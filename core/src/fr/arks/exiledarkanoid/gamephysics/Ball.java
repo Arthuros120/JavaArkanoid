@@ -37,6 +37,7 @@ public class Ball extends MovingElement {
         batch.draw(ball_image, this.position.x, this.position.y, this.size.width, this.size.height);
     }
 
+    @Override
     public void dispose() {
         ball_image.dispose();
     }
