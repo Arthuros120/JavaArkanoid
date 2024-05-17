@@ -17,12 +17,16 @@ public class Platform extends MovingElement {
 
     public Platform(Position position, Size size, Speed speed) {
         super(position, size, speed);
-        platform_image = new Texture(Gdx.files.internal("Paddle_C_Red_96x28.png"));
+        platform_image = new Texture(Gdx.files.internal("paddle_94x26.png"));
     }
 
     @Override
     public void render(SpriteBatch batch) {
         this.shape.setPosition(this.position.x, this.position.y);
         batch.draw(platform_image, this.position.x, this.position.y, this.size.width, this.size.height);
+    }
+
+    public void dispose() {
+        platform_image.dispose();
     }
 }

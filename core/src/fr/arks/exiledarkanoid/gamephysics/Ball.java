@@ -24,16 +24,20 @@ public class Ball extends MovingElement {
         if (this.position.x >= 400 - this.size.width || this.position.x <= this.size.width) {
             this.speed.vx = -this.speed.vx;
         }
-        if (this.position.y >= 800 - this.size.width || this.position.y <= this.size.width) {
+        if (this.position.y >= 800 - this.size.width) {
             this.speed.vy = -this.speed.vy;
         }
-        this.position.x += this.speed.vx;
-        this.position.y += this.speed.vy;
+        this.position.x += (int) (this.speed.vx * Gdx.graphics.getDeltaTime());
+        this.position.y += (int) (this.speed.vy * Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void render(SpriteBatch batch) {
         this.shape.setPosition(this.position.x, this.position.y);
         batch.draw(ball_image, this.position.x, this.position.y, this.size.width, this.size.height);
+    }
+
+    public void dispose() {
+        ball_image.dispose();
     }
 }

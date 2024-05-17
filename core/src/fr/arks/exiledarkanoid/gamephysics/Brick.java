@@ -25,4 +25,9 @@ public class Brick extends Element {
 
         batch.draw(block_image, this.position.x, this.position.y, this.size.width, this.size.height);
     }
+
+    @Override
+    public void dispose() {
+        block_image.dispose();
+    }
 }
