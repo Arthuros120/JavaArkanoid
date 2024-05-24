@@ -16,6 +16,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+/**
+ * Playfield class
+ * <p>
+ * The board where the game is played
+ * It contains the ball, the platform, the bricks and the bonuses
+ *
+ * @see Size
+ */
 public class Playfield {
     private final Texture background;
     private final Size size;
@@ -26,19 +34,20 @@ public class Playfield {
 
     private final int BALL_SPEED = 400;
     private final int PERCENT_BONUS_BRICK = 20;
-
+    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
+    public int score;
+    public BitmapFont font;
     private int nbLife;
-
     private ArrayList<ABonus> bonuses;
     private int countdownNextBonus = new Random().nextInt(1000, 2000);
-    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
-
     private boolean platformIsTouched = false;
 
-    public int score;
-
-    public BitmapFont font;
-
+    /**
+     * Constructor
+     *
+     * @param size     The size of the board
+     * @param nbBricks The number of bricks
+     */
     public Playfield(Size size, int nbBricks) {
         this.size = size;
         this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Speed(this.BALL_SPEED, this.BALL_SPEED));
@@ -55,6 +64,9 @@ public class Playfield {
         this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
     }
 
+    /**
+     * this function is called for each frame and modify the state of all the elements of the board like position or size
+     */
     public void update() {
 
         this.spawnBonus();
@@ -73,6 +85,9 @@ public class Playfield {
         this.checkLifeLost();
     }
 
+    /**
+     * Reset the board to its initial state
+     */
     public void reset() {
         this.nbLife = 3;
         this.score = 0;
@@ -81,6 +96,9 @@ public class Playfield {
         this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
     }
 
+    /**
+     * LifeCycle of the bonus effects
+     */
     private void lifetimeBonus() {
         if (!this.bonusEffectsActived.isEmpty()) {
 
@@ -110,6 +128,11 @@ public class Playfield {
         }
     }
 
+    /**
+     * Launch a bonus effect
+     *
+     * @param effect the effect to launch
+     */
     private void launchBonus(EBonusEffect effect) {
         int DEFAULT_TIME_BONUS = 500;
         if (effect == EBonusEffect.NO_BLOCK_COLLISION) {
@@ -119,7 +142,7 @@ public class Playfield {
         } else if (effect == EBonusEffect.PLATFORM_ENLARGE) {
             this.platform.changeSize(50);
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, DEFAULT_TIME_BONUS));
-        }  else if (effect == EBonusEffect.PLATFORM_SHRINK) {
+        } else if (effect == EBonusEffect.PLATFORM_SHRINK) {
             this.platform.changeSize(-50);
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, DEFAULT_TIME_BONUS));
         } else if (effect == EBonusEffect.SCORE_BONUS) {
@@ -131,6 +154,9 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the ball collide with a bonus
+     */
     private void bonusCollision() {
         ArrayList<ABonus> toRemove = new ArrayList<>();
 
@@ -161,10 +187,18 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the player has lost
+     *
+     * @return true if the player has lost, false otherwise
+     */
     public boolean isLost() {
         return nbLife <= 0;
     }
 
+    /**
+     * check if the player lost a life and reset the ball position
+     */
     private void checkLifeLost() {
         if (ball.position.y <= platform.position.y) {
             nbLife--;
@@ -172,6 +206,20 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the player has won
+     *
+     * @return true if the player has won, false otherwise
+     */
+    public boolean isWon() {
+        return brickMap.getBricks().isEmpty();
+    }
+
+    /**
+     * Draw the life and the score of the player
+     *
+     * @param batch the batch where the elements are drawn
+     */
     private void drawLife(SpriteBatch batch) {
         for (int i = 0; i < nbLife; i++) {
             batch.draw(ball.ball_image, size.width - 30 - i * 30, 25, ball.ball_image.getWidth(), ball.ball_image.getHeight());
@@ -179,12 +227,22 @@ public class Playfield {
         font.draw(batch, "Score: " + score, 10, 25);
     }
 
+    /**
+     * Draw the bonus effects actived
+     *
+     * @param batch the batch where the elements are drawn
+     */
     private void drawBonusInfo(SpriteBatch batch) {
         for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
             font.draw(batch, bonusEffect.first.toString() + " " + bonusEffect.second, 100, 100 + 25 * this.bonusEffectsActived.indexOf(bonusEffect));
         }
     }
 
+    /**
+     * this function is called for each frame and draw all the elements of the board
+     *
+     * @param batch the batch where the elements are drawn
+     */
     public void render(SpriteBatch batch) {
         batch.draw(background, 0, 0, size.width, size.height);
         ball.render(batch);
@@ -195,8 +253,7 @@ public class Playfield {
             BrickExplosion brickExplosion = iter.next();
             if (!brickExplosion.isFinished()) {
                 brickExplosion.render(batch);
-            }
-            else {
+            } else {
                 brickExplosion.dispose();
                 iter.remove();
             }
@@ -216,9 +273,5 @@ public class Playfield {
         for (ABonus bonus : bonuses) {
             bonus.dispose();
         }
-    }
-
-    public boolean isWon() {
-        return brickMap.getBricks().isEmpty();
     }
 }

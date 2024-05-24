@@ -2,15 +2,24 @@ package fr.arks.exiledarkanoid.gamephysics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
+import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bonus.BonusBrick;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
+/**
+ * BrickMap class
+ * <p>
+ * It contains all the bricks of the game
+ *
+ * @see Size
+ */
 public class BrickMap {
     private final Size size;
     private final ArrayList<Texture> block_images;
@@ -19,11 +28,16 @@ public class BrickMap {
     private final int nbMaxBricksPerLine = 8;
     private final int brickWidth;
     private final int brickHeight;
-
+    public boolean noCollision = false;
     private ArrayList<ArrayList<Brick>> bricks;
 
-    public boolean noCollision = false;
-
+    /**
+     * Constructor
+     *
+     * @param size      The size of the map
+     * @param nbBricks  The number of bricks
+     * @param pathBrick The path of the bricks
+     */
     public BrickMap(Size size, int nbBricks, String pathBrick) {
         this.size = size;
         this.block_images = new ArrayList<>();
@@ -43,6 +57,11 @@ public class BrickMap {
         this.brickHeight = this.brickWidth / 2;
     }
 
+    /**
+     * Get all the bricks of the game
+     *
+     * @return the list of all the bricks
+     */
     public ArrayList<Brick> getBricks() {
         ArrayList<Brick> bricks = new ArrayList<>();
         for (ArrayList<Brick> brick : this.bricks) {
@@ -51,6 +70,12 @@ public class BrickMap {
         return bricks;
     }
 
+    /**
+     * Generate the bricks of the game with a bonus on some of them
+     *
+     * @param percentBonusBrick the percentage of bricks that will have a bonus
+     * @return the list of bonuses
+     */
     public ArrayList<ABonus> generate(int percentBonusBrick) {
         Random rand = new Random();
         this.bricks = new ArrayList<>();
@@ -92,6 +117,11 @@ public class BrickMap {
         return bonuses;
     }
 
+    /**
+     * Remove a brick from the map
+     *
+     * @param brick the brick to remove
+     */
     public void removeBrick(Brick brick) {
         for (ArrayList<Brick> row : this.bricks) {
             if (row.contains(brick)) {
@@ -101,12 +131,22 @@ public class BrickMap {
         }
     }
 
+    /**
+     * Check if the map is empty
+     *
+     * @return true if the map is empty, false otherwise
+     */
     public void dispose() {
         for (Brick brick : this.getBricks()) {
             brick.dispose();
         }
     }
 
+    /**
+     * Render the bricks
+     *
+     * @param batch the batch
+     */
     public void render(SpriteBatch batch) {
         for (ArrayList<Brick> row : this.bricks) {
             for (Brick brick : row) {

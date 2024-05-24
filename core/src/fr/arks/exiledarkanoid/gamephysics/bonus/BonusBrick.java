@@ -7,10 +7,23 @@ import fr.arks.exiledarkanoid.gamephysics.Platform;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
+/**
+ * BonusBrick class
+ * <p>
+ * This class is used to create a bonus brick
+ *
+ * @see ABonus
+ */
 public class BonusBrick extends ABonus {
 
     public boolean isTouched = false;
 
+    /**
+     * Constructor
+     *
+     * @param position The position of the bonus brick
+     * @param size     The size of the bonus brick
+     */
     public BonusBrick(Position position, Size size) {
         super(position, "bonus_brick");
         this.shape.setSize(size.width - 15, size.height - 15);
