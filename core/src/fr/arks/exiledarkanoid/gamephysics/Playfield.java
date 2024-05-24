@@ -3,11 +3,9 @@ package fr.arks.exiledarkanoid.gamephysics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
-import fr.arks.exiledarkanoid.gameplay.ExiledArkanoid;
 
 public class Playfield {
     private final Size size;
@@ -35,13 +33,7 @@ public class Playfield {
         ball.collideWith(brickMap);
         ball.collideWith(size);
 
-        if (Gdx.input.isTouched()) {
-            Vector2 touchPos = new Vector2();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            if (touchPos.x >= (float) platform.size.width / 2.0 && touchPos.x <= ExiledArkanoid.WIDTH - (float) platform.size.width / 2.0) {
-                platform.position.x = (int) (touchPos.x - platform.size.width / 2);
-            }
-        }
+        platform.update(size.width);
         ball.move();
     }
 
