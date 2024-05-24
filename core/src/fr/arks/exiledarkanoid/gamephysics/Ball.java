@@ -11,6 +11,7 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Ball extends MovingElement {
@@ -34,7 +35,7 @@ public class Ball extends MovingElement {
         this.position.y += (int) (this.speed.vy * Gdx.graphics.getDeltaTime());
     }
 
-    public int collideWith(BrickMap brickMap, boolean noCollision) {
+    public int collideWith(BrickMap brickMap, ArrayList<BrickExplosion> brickExplosions, boolean noCollision) {
         Iterator<Brick> iter = brickMap.getBricks().iterator();
         Vector2 ball_position = new Vector2(this.position.x, this.position.y);
         while (iter.hasNext()) {
@@ -60,6 +61,8 @@ public class Ball extends MovingElement {
                     this.bound(A, B, ball_position, false, noCollision);
                 }
                 brickMap.removeBrick(brick);
+                BrickExplosion brickExplosion = new BrickExplosion(brick);
+                brickExplosions.add(brickExplosion);
                 return 1;
             }
         }

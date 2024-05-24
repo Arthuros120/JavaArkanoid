@@ -13,6 +13,7 @@ import fr.arks.exiledarkanoid.gamephysics.bonus.BonusDrop;
 import fr.arks.exiledarkanoid.gamephysics.bonus.EBonusEffect;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Playfield {
@@ -21,8 +22,8 @@ public class Playfield {
     private final Ball ball;
     private final Platform platform;
     private final BrickMap brickMap;
+    private final ArrayList<BrickExplosion> brickExplosions;
 
-    private final int DEFAULT_TIME_BONUS = 500;
     private final int BALL_SPEED = 400;
     private final int PERCENT_BONUS_BRICK = 20;
 
@@ -47,6 +48,7 @@ public class Playfield {
 
         this.background = new Texture(Gdx.files.internal("background.png"));
         this.brickMap = new BrickMap(size, nbBricks, "bricks");
+        this.brickExplosions = new ArrayList<>();
 
         this.font = new BitmapFont();
 
@@ -60,7 +62,7 @@ public class Playfield {
         if (ball.position.y < platform.position.y + platform.size.height + 100) {
             platformIsTouched = ball.collideWith(platform);
         }
-        score += ball.collideWith(brickMap, this.brickMap.noCollision);
+        score += ball.collideWith(brickMap, this.brickExplosions, this.brickMap.noCollision);
         ball.collideWith(size);
 
         platform.update(size.width);
@@ -109,16 +111,17 @@ public class Playfield {
     }
 
     private void launchBonus(EBonusEffect effect) {
+        int DEFAULT_TIME_BONUS = 500;
         if (effect == EBonusEffect.NO_BLOCK_COLLISION) {
             this.brickMap.noCollision = true;
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.NO_BLOCK_COLLISION, this.score));
             System.out.println(this.score);
         } else if (effect == EBonusEffect.PLATFORM_ENLARGE) {
             this.platform.changeSize(50);
-            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, this.DEFAULT_TIME_BONUS));
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, DEFAULT_TIME_BONUS));
         }  else if (effect == EBonusEffect.PLATFORM_SHRINK) {
             this.platform.changeSize(-50);
-            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, this.DEFAULT_TIME_BONUS));
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, DEFAULT_TIME_BONUS));
         } else if (effect == EBonusEffect.SCORE_BONUS) {
             this.score += 10;
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.SCORE_BONUS, 100));
@@ -187,6 +190,17 @@ public class Playfield {
         ball.render(batch);
         platform.render(batch);
         brickMap.render(batch);
+        Iterator<BrickExplosion> iter = brickExplosions.iterator();
+        while (iter.hasNext()) {
+            BrickExplosion brickExplosion = iter.next();
+            if (!brickExplosion.isFinished()) {
+                brickExplosion.render(batch);
+            }
+            else {
+                brickExplosion.dispose();
+                iter.remove();
+            }
+        }
         for (ABonus bonus : bonuses) {
             bonus.render(batch);
         }
@@ -202,5 +216,9 @@ public class Playfield {
         for (ABonus bonus : bonuses) {
             bonus.dispose();
         }
+    }
+
+    public boolean isWon() {
+        return brickMap.getBricks().isEmpty();
     }
 }

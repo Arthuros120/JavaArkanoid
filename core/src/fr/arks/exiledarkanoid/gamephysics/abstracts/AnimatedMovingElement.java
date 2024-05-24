@@ -15,7 +15,7 @@ public abstract class AnimatedMovingElement extends MovingElement {
     public final Texture[] textures;
     public int animationSpeed;
 
-    private int currentTextureIndex = 0;
+    public int currentTextureIndex = 0;
     private int rate = 0;
 
     public AnimatedMovingElement(Position position, Size size, Speed speed, String pathAsset, int animationSpeed) {
