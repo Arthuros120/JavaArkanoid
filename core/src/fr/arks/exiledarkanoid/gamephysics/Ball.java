@@ -15,13 +15,18 @@ import java.util.Iterator;
 
 public class Ball extends MovingElement {
 
-    public final Circle shape = new Circle(this.position.x, this.position.y, (float) this.size.width / 2);
+    public final Circle shape;
 
     public final Texture ball_image;
 
-    public Ball(Position position, Size size, Speed speed) {
-        super(position, size, speed);
+    public Ball(Position position, Speed speed) {
+        super(position, new Size(0, 0), speed);
         ball_image = new Texture(Gdx.files.internal("ball.png"));
+
+        this.size.width = ball_image.getWidth();
+        this.size.height = ball_image.getHeight();
+
+        this.shape = new Circle(this.position.x, this.position.y, (float) this.size.width / 2);
     }
 
     public void move() {

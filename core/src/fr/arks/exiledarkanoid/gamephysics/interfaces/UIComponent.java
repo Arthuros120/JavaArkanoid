@@ -1,4 +1,4 @@
-package fr.arks.exiledarkanoid.gamephysics;
+package fr.arks.exiledarkanoid.gamephysics.interfaces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
