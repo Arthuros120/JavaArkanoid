@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid.gamephysics.bases;
 
 /**
  * Position class
- *
+ * <p>
  * This class is used to create a position
  */
 public class Position {

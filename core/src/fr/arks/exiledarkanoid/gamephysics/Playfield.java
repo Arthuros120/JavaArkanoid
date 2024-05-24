@@ -18,7 +18,7 @@ import java.util.Random;
 
 /**
  * Playfield class
- *
+ * <p>
  * The board where the game is played
  * It contains the ball, the platform, the bricks and the bonuses
  *
@@ -34,23 +34,18 @@ public class Playfield {
 
     private final int BALL_SPEED = 400;
     private final int PERCENT_BONUS_BRICK = 20;
-
+    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
+    public int score;
+    public BitmapFont font;
     private int nbLife;
-
     private ArrayList<ABonus> bonuses;
     private int countdownNextBonus = new Random().nextInt(1000, 2000);
-    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
-
     private boolean platformIsTouched = false;
-
-    public int score;
-
-    public BitmapFont font;
 
     /**
      * Constructor
      *
-     * @param size The size of the board
+     * @param size     The size of the board
      * @param nbBricks The number of bricks
      */
     public Playfield(Size size, int nbBricks) {
@@ -135,6 +130,7 @@ public class Playfield {
 
     /**
      * Launch a bonus effect
+     *
      * @param effect the effect to launch
      */
     private void launchBonus(EBonusEffect effect) {
@@ -146,7 +142,7 @@ public class Playfield {
         } else if (effect == EBonusEffect.PLATFORM_ENLARGE) {
             this.platform.changeSize(50);
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, DEFAULT_TIME_BONUS));
-        }  else if (effect == EBonusEffect.PLATFORM_SHRINK) {
+        } else if (effect == EBonusEffect.PLATFORM_SHRINK) {
             this.platform.changeSize(-50);
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, DEFAULT_TIME_BONUS));
         } else if (effect == EBonusEffect.SCORE_BONUS) {
@@ -193,6 +189,7 @@ public class Playfield {
 
     /**
      * Check if the player has lost
+     *
      * @return true if the player has lost, false otherwise
      */
     public boolean isLost() {
@@ -211,6 +208,7 @@ public class Playfield {
 
     /**
      * Check if the player has won
+     *
      * @return true if the player has won, false otherwise
      */
     public boolean isWon() {
@@ -219,6 +217,7 @@ public class Playfield {
 
     /**
      * Draw the life and the score of the player
+     *
      * @param batch the batch where the elements are drawn
      */
     private void drawLife(SpriteBatch batch) {
@@ -230,6 +229,7 @@ public class Playfield {
 
     /**
      * Draw the bonus effects actived
+     *
      * @param batch the batch where the elements are drawn
      */
     private void drawBonusInfo(SpriteBatch batch) {
@@ -240,6 +240,7 @@ public class Playfield {
 
     /**
      * this function is called for each frame and draw all the elements of the board
+     *
      * @param batch the batch where the elements are drawn
      */
     public void render(SpriteBatch batch) {
@@ -252,8 +253,7 @@ public class Playfield {
             BrickExplosion brickExplosion = iter.next();
             if (!brickExplosion.isFinished()) {
                 brickExplosion.render(batch);
-            }
-            else {
+            } else {
                 brickExplosion.dispose();
                 iter.remove();
             }

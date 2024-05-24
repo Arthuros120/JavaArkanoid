@@ -7,7 +7,7 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
 /**
  * BrickExplosion class
- *
+ * <p>
  * This class is used to display the explosion of a brick when it is destroyed
  *
  * @see AnimatedMovingElement
@@ -30,6 +30,7 @@ public class BrickExplosion extends AnimatedMovingElement {
 
     /**
      * Check if the explosion is finished
+     *
      * @return true if the explosion animation is finished
      */
     public boolean isFinished() {

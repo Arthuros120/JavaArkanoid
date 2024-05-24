@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid.gamephysics.bases;
 
 /**
  * Speed class
- *
+ * <p>
  * This class is used to create a speed
  */
 public class Speed {

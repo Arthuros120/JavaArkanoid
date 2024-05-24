@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 /**
  * Ball class
- *
+ * <p>
  * This class is used to create a ball
  *
  * @see MovingElement
@@ -31,7 +31,7 @@ public class Ball extends MovingElement {
      * Constructor
      *
      * @param position The position of the ball
-     * @param speed The speed of the ball
+     * @param speed    The speed of the ball
      */
     public Ball(Position position, Speed speed) {
         super(position, new Size(0, 0), speed);
@@ -44,6 +44,28 @@ public class Ball extends MovingElement {
     }
 
     /**
+     * check if the ball collides under or above the line AB
+     *
+     * @param A position of the ball
+     * @param B
+     * @param C
+     * @return 1 if the ball is above the line, -1 if it is under, 0 if it is on the line
+     */
+    private static int positionRelative(Vector2 A, Vector2 B, Vector2 C) {
+        /*
+         A function to know if the point C is under or above the line AB
+         */
+        float crossProduct = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
+        if (crossProduct > 0) {
+            return 1;
+        } else if (crossProduct < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Move the ball according to its speed
      */
     public void move() {
@@ -53,9 +75,10 @@ public class Ball extends MovingElement {
 
     /**
      * Check if the ball collide with a brick
-     * @param brickMap the map of bricks
+     *
+     * @param brickMap        the map of bricks
      * @param brickExplosions the list of explosions that have to be displayed
-     * @param noCollision if true, the ball will not change its trajectory when it collides with a brick
+     * @param noCollision     if true, the ball will not change its trajectory when it collides with a brick
      * @return 1 if the ball collide with a brick, 0 otherwise (the score is incremented in the Playfield class)
      */
     public int collideWith(BrickMap brickMap, ArrayList<BrickExplosion> brickExplosions, boolean noCollision) {
@@ -94,6 +117,7 @@ public class Ball extends MovingElement {
 
     /**
      * Check if the ball collide with a platform
+     *
      * @param platform the platform
      * @return true if the ball collide with the platform, false otherwise
      */
@@ -108,6 +132,7 @@ public class Ball extends MovingElement {
 
     /**
      * Check if the ball collide with the sides of the board
+     *
      * @param mapSize the size of the board
      */
     public void collideWith(Size mapSize) {
@@ -146,27 +171,6 @@ public class Ball extends MovingElement {
         }
     }
 
-    /**
-     * check if the ball collides under or above the line AB
-     * @param A position of the ball
-     * @param B
-     * @param C
-     * @return 1 if the ball is above the line, -1 if it is under, 0 if it is on the line
-     */
-    private static int positionRelative(Vector2 A, Vector2 B, Vector2 C) {
-        /*
-         A function to know if the point C is under or above the line AB
-         */
-        float crossProduct = (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x - A.x);
-        if (crossProduct > 0) {
-            return 1;
-        } else if (crossProduct < 0) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
     @Override
     public void render(SpriteBatch batch) {
         this.shape.setPosition(this.position.x, this.position.y);
@@ -180,7 +184,8 @@ public class Ball extends MovingElement {
 
     /**
      * Reset the ball to the center of the board
-     * @param size the size of the board
+     *
+     * @param size  the size of the board
      * @param speed the speed of the ball
      */
     public void reset(Size size, Speed speed) {

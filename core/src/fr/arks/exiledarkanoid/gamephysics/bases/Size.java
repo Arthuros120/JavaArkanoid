@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid.gamephysics.bases;
 
 /**
  * Size class
- *
+ * <p>
  * This class is used to create a size
  */
 public class Size {
@@ -12,7 +12,7 @@ public class Size {
     /**
      * Constructor
      *
-     * @param width The width
+     * @param width  The width
      * @param height The height
      */
     public Size(int width, int height) {

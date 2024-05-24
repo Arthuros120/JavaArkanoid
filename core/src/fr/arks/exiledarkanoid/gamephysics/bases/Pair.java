@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid.gamephysics.bases;
 
 /**
  * Pair class
- *
+ * <p>
  * This class is used to create a pair
  *
  * @param <T> The first element

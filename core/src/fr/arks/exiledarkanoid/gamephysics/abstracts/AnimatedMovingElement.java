@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /**
  * AnimatedMovingElement class
- *
+ * <p>
  * This class is used to create an animated moving element
  *
  * @see MovingElement
@@ -28,10 +28,10 @@ public abstract class AnimatedMovingElement extends MovingElement {
     /**
      * Constructor
      *
-     * @param position The position of the animated moving element
-     * @param size The size of the animated moving element
-     * @param speed The speed of the animated moving element
-     * @param pathAsset The path of the asset
+     * @param position       The position of the animated moving element
+     * @param size           The size of the animated moving element
+     * @param speed          The speed of the animated moving element
+     * @param pathAsset      The path of the asset
      * @param animationSpeed The speed of the animation
      */
     public AnimatedMovingElement(Position position, Size size, Speed speed, String pathAsset, int animationSpeed) {
@@ -44,9 +44,9 @@ public abstract class AnimatedMovingElement extends MovingElement {
     /**
      * Constructor
      *
-     * @param position The position of the animated moving element
-     * @param size The size of the animated moving element
-     * @param speed The speed of the animated moving element
+     * @param position  The position of the animated moving element
+     * @param size      The size of the animated moving element
+     * @param speed     The speed of the animated moving element
      * @param pathAsset The path of the asset
      */
     public AnimatedMovingElement(Position position, Size size, Speed speed, String pathAsset) {
@@ -86,7 +86,7 @@ public abstract class AnimatedMovingElement extends MovingElement {
     /**
      * Draw the animated moving element
      *
-     * @param batch The batch
+     * @param batch    The batch
      * @param position The position
      */
     public void draw(SpriteBatch batch, Position position) {

@@ -4,11 +4,10 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 
 /**
  * BonusDrop
- *
+ * <p>
  * Bonus drop on top of the screen
  *
  * @see ABonus
- *
  */
 public class BonusDrop extends ABonus {
 

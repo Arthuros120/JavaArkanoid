@@ -12,7 +12,7 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
 /**
  * Abstract class for the bonus
- *
+ * <p>
  * This class is used to create a bonus
  *
  * @see AnimatedMovingElement
@@ -25,7 +25,7 @@ public abstract class ABonus extends AnimatedMovingElement {
     /**
      * Constructor
      *
-     * @param position The position of the bonus
+     * @param position  The position of the bonus
      * @param pathAsset The path of the asset
      */
     public ABonus(Position position, String pathAsset) {
@@ -49,8 +49,8 @@ public abstract class ABonus extends AnimatedMovingElement {
     /**
      * Check if the bonus is touched
      *
-     * @param platform The platform
-     * @param ball The ball
+     * @param platform    The platform
+     * @param ball        The ball
      * @param noCollision If the collision is disabled
      * @return If the bonus is touched
      */

@@ -10,7 +10,7 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
 /**
  * Platform class
- *
+ * <p>
  * This class is used to create a platform
  *
  * @see Element
@@ -35,6 +35,7 @@ public class Platform extends Element {
 
     /**
      * Change the size of the platform when the player takes a shrink or enlarge bonus
+     *
      * @param howManyPixels the number of pixels to add or remove to the platforms width
      */
     public void changeSize(int howManyPixels) {
@@ -44,6 +45,7 @@ public class Platform extends Element {
 
     /**
      * Update the position of the platform according to the mouse position
+     *
      * @param gameWidth the width of the game
      */
     public void update(int gameWidth) {

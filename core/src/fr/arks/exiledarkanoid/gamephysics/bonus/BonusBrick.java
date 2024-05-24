@@ -9,7 +9,7 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
 /**
  * BonusBrick class
- *
+ * <p>
  * This class is used to create a bonus brick
  *
  * @see ABonus
@@ -22,7 +22,7 @@ public class BonusBrick extends ABonus {
      * Constructor
      *
      * @param position The position of the bonus brick
-     * @param size The size of the bonus brick
+     * @param size     The size of the bonus brick
      */
     public BonusBrick(Position position, Size size) {
         super(position, "bonus_brick");

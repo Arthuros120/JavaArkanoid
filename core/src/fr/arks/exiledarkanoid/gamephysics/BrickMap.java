@@ -2,18 +2,20 @@ package fr.arks.exiledarkanoid.gamephysics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
+import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bonus.BonusBrick;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * BrickMap class
- *
+ * <p>
  * It contains all the bricks of the game
  *
  * @see Size
@@ -26,16 +28,14 @@ public class BrickMap {
     private final int nbMaxBricksPerLine = 8;
     private final int brickWidth;
     private final int brickHeight;
-
-    private ArrayList<ArrayList<Brick>> bricks;
-
     public boolean noCollision = false;
+    private ArrayList<ArrayList<Brick>> bricks;
 
     /**
      * Constructor
      *
-     * @param size The size of the map
-     * @param nbBricks The number of bricks
+     * @param size      The size of the map
+     * @param nbBricks  The number of bricks
      * @param pathBrick The path of the bricks
      */
     public BrickMap(Size size, int nbBricks, String pathBrick) {
@@ -59,6 +59,7 @@ public class BrickMap {
 
     /**
      * Get all the bricks of the game
+     *
      * @return the list of all the bricks
      */
     public ArrayList<Brick> getBricks() {
@@ -71,6 +72,7 @@ public class BrickMap {
 
     /**
      * Generate the bricks of the game with a bonus on some of them
+     *
      * @param percentBonusBrick the percentage of bricks that will have a bonus
      * @return the list of bonuses
      */
@@ -117,6 +119,7 @@ public class BrickMap {
 
     /**
      * Remove a brick from the map
+     *
      * @param brick the brick to remove
      */
     public void removeBrick(Brick brick) {
@@ -130,6 +133,7 @@ public class BrickMap {
 
     /**
      * Check if the map is empty
+     *
      * @return true if the map is empty, false otherwise
      */
     public void dispose() {
@@ -140,6 +144,7 @@ public class BrickMap {
 
     /**
      * Render the bricks
+     *
      * @param batch the batch
      */
     public void render(SpriteBatch batch) {
