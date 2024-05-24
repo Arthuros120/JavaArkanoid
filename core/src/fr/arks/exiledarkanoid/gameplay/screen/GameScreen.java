@@ -51,6 +51,9 @@ public class GameScreen implements Screen {
         if (this.playfield.isLost()) {
             game.setScreen(new LostScreen(game));
         }
+        else if (this.playfield.isWon()) {
+            game.setScreen(new WinScreen(game));
+        }
     }
 
     @Override
