@@ -11,7 +11,6 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 public class Platform extends Element {
 
     public final Rectangle shape;
-
     private final Texture platform_image;
 
    public Platform(Position position) {

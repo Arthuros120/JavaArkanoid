@@ -23,7 +23,8 @@ public class Playfield {
     private final BrickMap brickMap;
 
     private final int DEFAULT_TIME_BONUS = 500;
-    private final int percentBonusBrick = 20;
+    private final int BALL_SPEED = 400;
+    private final int PERCENT_BONUS_BRICK = 20;
 
     private int nbLife;
 
@@ -39,7 +40,7 @@ public class Playfield {
 
     public Playfield(Size size, int nbBricks) {
         this.size = size;
-        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Speed(200, 200));
+        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Speed(this.BALL_SPEED, this.BALL_SPEED));
         this.platform = new Platform(new Position(size.width / 2, 50));
         this.nbLife = 3;
         this.score = 0;
@@ -49,12 +50,12 @@ public class Playfield {
 
         this.font = new BitmapFont();
 
-        this.bonuses = this.brickMap.generate(this.percentBonusBrick);
+        this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
     }
 
     public void update() {
 
-        spawnBonus();
+        this.spawnBonus();
 
         if (ball.position.y < platform.position.y + platform.size.height + 100) {
             platformIsTouched = ball.collideWith(platform);
@@ -74,8 +75,8 @@ public class Playfield {
         this.nbLife = 3;
         this.score = 0;
         this.countdownNextBonus = new Random().nextInt(1000, 2000);
-        this.bonuses = this.brickMap.generate(this.percentBonusBrick);
-        this.ball.reset(size);
+        this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
+        this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
     }
 
     private void lifetimeBonus() {
@@ -164,7 +165,7 @@ public class Playfield {
     private void checkLifeLost() {
         if (ball.position.y <= platform.position.y) {
             nbLife--;
-            this.ball.reset(size);
+            this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
         }
     }
 
