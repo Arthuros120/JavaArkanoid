@@ -14,12 +14,25 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Ball class
+ *
+ * This class is used to create a ball
+ *
+ * @see MovingElement
+ */
 public class Ball extends MovingElement {
 
     public final Circle shape;
 
     public final Texture ball_image;
 
+    /**
+     * Constructor
+     *
+     * @param position The position of the ball
+     * @param speed The speed of the ball
+     */
     public Ball(Position position, Speed speed) {
         super(position, new Size(0, 0), speed);
         ball_image = new Texture(Gdx.files.internal("ball.png"));
@@ -165,6 +178,11 @@ public class Ball extends MovingElement {
         ball_image.dispose();
     }
 
+    /**
+     * Reset the ball to the center of the board
+     * @param size the size of the board
+     * @param speed the speed of the ball
+     */
     public void reset(Size size, Speed speed) {
         this.position.x = size.width / 2;
         this.position.y = size.height / 2;

@@ -12,7 +12,11 @@ import java.io.File;
 import java.util.*;
 
 /**
+ * BrickMap class
+ *
  * It contains all the bricks of the game
+ *
+ * @see Size
  */
 public class BrickMap {
     private final Size size;
@@ -27,6 +31,13 @@ public class BrickMap {
 
     public boolean noCollision = false;
 
+    /**
+     * Constructor
+     *
+     * @param size The size of the map
+     * @param nbBricks The number of bricks
+     * @param pathBrick The path of the bricks
+     */
     public BrickMap(Size size, int nbBricks, String pathBrick) {
         this.size = size;
         this.block_images = new ArrayList<>();
@@ -104,6 +115,10 @@ public class BrickMap {
         return bonuses;
     }
 
+    /**
+     * Remove a brick from the map
+     * @param brick the brick to remove
+     */
     public void removeBrick(Brick brick) {
         for (ArrayList<Brick> row : this.bricks) {
             if (row.contains(brick)) {
@@ -113,12 +128,20 @@ public class BrickMap {
         }
     }
 
+    /**
+     * Check if the map is empty
+     * @return true if the map is empty, false otherwise
+     */
     public void dispose() {
         for (Brick brick : this.getBricks()) {
             brick.dispose();
         }
     }
 
+    /**
+     * Render the bricks
+     * @param batch the batch
+     */
     public void render(SpriteBatch batch) {
         for (ArrayList<Brick> row : this.bricks) {
             for (Brick brick : row) {

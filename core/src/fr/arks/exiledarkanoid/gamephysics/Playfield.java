@@ -17,8 +17,12 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
+ * Playfield class
+ *
  * The board where the game is played
  * It contains the ball, the platform, the bricks and the bonuses
+ *
+ * @see Size
  */
 public class Playfield {
     private final Texture background;
@@ -43,6 +47,12 @@ public class Playfield {
 
     public BitmapFont font;
 
+    /**
+     * Constructor
+     *
+     * @param size The size of the board
+     * @param nbBricks The number of bricks
+     */
     public Playfield(Size size, int nbBricks) {
         this.size = size;
         this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Speed(this.BALL_SPEED, this.BALL_SPEED));
@@ -91,6 +101,9 @@ public class Playfield {
         this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
     }
 
+    /**
+     * LifeCycle of the bonus effects
+     */
     private void lifetimeBonus() {
         if (!this.bonusEffectsActived.isEmpty()) {
 
@@ -120,6 +133,10 @@ public class Playfield {
         }
     }
 
+    /**
+     * Launch a bonus effect
+     * @param effect the effect to launch
+     */
     private void launchBonus(EBonusEffect effect) {
         int DEFAULT_TIME_BONUS = 500;
         if (effect == EBonusEffect.NO_BLOCK_COLLISION) {
@@ -141,6 +158,9 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the ball collide with a bonus
+     */
     private void bonusCollision() {
         ArrayList<ABonus> toRemove = new ArrayList<>();
 
@@ -189,10 +209,18 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the player has won
+     * @return true if the player has won, false otherwise
+     */
     public boolean isWon() {
         return brickMap.getBricks().isEmpty();
     }
 
+    /**
+     * Draw the life and the score of the player
+     * @param batch the batch where the elements are drawn
+     */
     private void drawLife(SpriteBatch batch) {
         for (int i = 0; i < nbLife; i++) {
             batch.draw(ball.ball_image, size.width - 30 - i * 30, 25, ball.ball_image.getWidth(), ball.ball_image.getHeight());
@@ -200,6 +228,10 @@ public class Playfield {
         font.draw(batch, "Score: " + score, 10, 25);
     }
 
+    /**
+     * Draw the bonus effects actived
+     * @param batch the batch where the elements are drawn
+     */
     private void drawBonusInfo(SpriteBatch batch) {
         for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
             font.draw(batch, bonusEffect.first.toString() + " " + bonusEffect.second, 100, 100 + 25 * this.bonusEffectsActived.indexOf(bonusEffect));

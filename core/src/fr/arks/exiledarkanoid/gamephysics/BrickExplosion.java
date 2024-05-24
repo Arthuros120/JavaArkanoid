@@ -6,10 +6,24 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
 /**
+ * BrickExplosion class
+ *
  * This class is used to display the explosion of a brick when it is destroyed
+ *
+ * @see AnimatedMovingElement
+ * @see Brick
+ * @see Size
+ * @see Speed
+ * @see SpriteBatch
+ * @see Brick
  */
 public class BrickExplosion extends AnimatedMovingElement {
 
+    /**
+     * Constructor
+     *
+     * @param brick The brick that is destroyed
+     */
     public BrickExplosion(Brick brick) {
         super(brick.position, new Size(200, 200), new Speed(0, 0), "bricks/brick_explosion", 10);
     }

@@ -8,11 +8,23 @@ import fr.arks.exiledarkanoid.gamephysics.abstracts.Element;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
+/**
+ * Platform class
+ *
+ * This class is used to create a platform
+ *
+ * @see Element
+ */
 public class Platform extends Element {
 
     public final Rectangle shape;
     private final Texture platform_image;
 
+    /**
+     * Constructor
+     *
+     * @param position The position of the platform
+     */
     public Platform(Position position) {
         super(position, new Size(0, 0));
         platform_image = new Texture(Gdx.files.internal("paddle.png"));
@@ -30,6 +42,10 @@ public class Platform extends Element {
         this.shape.setSize(this.size.width, this.size.height);
     }
 
+    /**
+     * Update the position of the platform according to the mouse position
+     * @param gameWidth the width of the game
+     */
     public void update(int gameWidth) {
         if (Gdx.input.isTouched()) {
             if (Gdx.input.getX() >= (float) this.size.width / 2.0 && Gdx.input.getX() <= gameWidth - (float) this.size.width / 2.0) {
