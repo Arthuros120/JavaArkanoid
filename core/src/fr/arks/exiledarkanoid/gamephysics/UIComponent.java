@@ -1,7 +1,8 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface UIComponent {
-    void render(ShapeRenderer shapeRenderer);
+    void render(SpriteBatch batch);
+    void dispose();
 }

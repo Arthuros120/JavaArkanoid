@@ -8,4 +8,12 @@ public class Speed {
         this.vx = vx;
         this.vy = vy;
     }
+
+    @Override
+    public String toString() {
+        return "Speed{" +
+                "vx=" + vx +
+                ", vy=" + vy +
+                '}';
+    }
 }

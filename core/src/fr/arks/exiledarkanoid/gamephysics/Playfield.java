@@ -1,91 +1,70 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+import fr.arks.exiledarkanoid.gameplay.ExiledArkanoid;
 
 public class Playfield {
-    private final int nbBricks;
     private final Size size;
     private final Ball ball;
     private final Platform platform;
-    private ArrayList<Brick> bricks;
+    private final BrickMap brickMap;
+
+    private final Texture background;
 
     public Playfield(Size size, int nbBricks) {
-        this.nbBricks = nbBricks;
         this.size = size;
-        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Size(10, 10), new Speed(4, 4));
-        this.platform = new Platform(new Position(size.width / 2, 50), new Size(80, 20), new Speed(1, 0));
+        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Size(28, 28), new Speed(200, 200));
+        this.platform = new Platform(new Position(size.width / 2, 50), new Size(94, 26), new Speed(1, 0));
 
-        this.bricks = new ArrayList<>();
-
-        int brickWidth = size.width / 10;
-        int brickHeight = size.height / 20;
-
-        for (int i = 0; i < nbBricks; i++) {
-            int x = (i % 10) * brickWidth;
-            int y = size.height - (i / 10) * brickHeight;
-
-            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
-        }
+        this.background = new Texture(Gdx.files.internal("background.png"));
+        this.brickMap = new BrickMap(size, nbBricks, "bricks");
 
     }
 
     public void update() {
-        ball.move();
-        Iterator<Brick> iter = bricks.iterator();
-        while (iter.hasNext()) {
-            Brick brick = iter.next();
-            if (ball.position.x >= brick.position.x && ball.position.x <= brick.position.x + brick.size.width && (ball.position.y >= brick.position.y - ball.size.width || (ball.position.y <= brick.position.y + brick.size.height + ball.size.width && ball.position.y >= brick.position.y + brick.size.height))) {
-                ball.speed.vy = -ball.speed.vy;
-                iter.remove();
-                break;
-            } else if (ball.position.y >= brick.position.y && ball.position.y <= brick.position.y + brick.size.height && (ball.position.x >= brick.position.x - ball.size.width || (ball.position.x <= brick.position.x + brick.size.width + ball.size.height && ball.position.x >= brick.position.x + brick.size.width))) {
-                ball.speed.vx = -ball.speed.vx;
-                iter.remove();
-                break;
+
+        if (ball.position.y < platform.position.y + platform.size.height + 100) {
+            ball.collideWith(platform);
+        }
+        ball.collideWith(brickMap);
+        ball.collideWith(size);
+
+        if (Gdx.input.isTouched()) {
+            Vector2 touchPos = new Vector2();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+            if (touchPos.x >= (float) platform.size.width / 2.0 && touchPos.x <= ExiledArkanoid.WIDTH - (float) platform.size.width / 2.0) {
+                platform.position.x = (int) (touchPos.x - platform.size.width / 2);
             }
         }
-        if (ball.position.x >= platform.position.x && ball.position.x <= platform.position.x + platform.size.width && ball.position.y <= platform.position.y + platform.size.height + ball.size.width) {
-            ball.speed.vy = -ball.speed.vy;
-            ball.speed.vx += (2 * (ball.position.x - platform.position.x) / platform.size.width) - 1;
-        }
+        ball.move();
     }
 
     public void reset() {
-        this.bricks = new ArrayList<>();
-        int brickWidth = size.width / 10;
-        int brickHeight = size.height / 20;
-        for (int i = 0; i < nbBricks; i++) {
-            int x = (i % 10) * brickWidth;
-            int y = size.height - (i / 10) * brickHeight;
-
-            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
-        }
-
-        ball.position.x = size.width / 2;
-        ball.position.y = size.height / 2;
-        ball.speed.vx = 4;
-        ball.speed.vy = 4;
+        this.brickMap.generate();
+        this.ball.reset(size);
     }
 
     public boolean isLost() {
         return ball.position.y < platform.position.y;
     }
 
-    public Platform getPlatform() {
-        return platform;
+    public void render(SpriteBatch batch) {
+        batch.draw(background, 0, 0, size.width, size.height);
+        ball.render(batch);
+        platform.render(batch);
+        brickMap.render(batch);
     }
 
-    public void render(ShapeRenderer shapeRenderer) {
-        ball.render(shapeRenderer);
-        platform.render(shapeRenderer);
-        for (Brick brick : bricks) {
-            brick.render(shapeRenderer);
-        }
+    public void dispose() {
+        ball.dispose();
+        platform.dispose();
+        brickMap.dispose();
+        background.dispose();
     }
 }
