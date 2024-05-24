@@ -20,11 +20,11 @@ public class Ball extends MovingElement {
         ball_image = new Texture(Gdx.files.internal("ball.png"));
     }
 
-    public void move() {
-        if (this.position.x >= 400 - this.size.width || this.position.x <= this.size.width) {
+    public void move(Size mapSize) {
+        if (this.position.x >= mapSize.width - this.size.width || this.position.x <= 0) {
             this.speed.vx = -this.speed.vx;
         }
-        if (this.position.y >= 800 - this.size.width) {
+        if (this.position.y >= mapSize.height - this.size.width) {
             this.speed.vy = -this.speed.vy;
         }
         this.position.x += (int) (this.speed.vx * Gdx.graphics.getDeltaTime());
@@ -40,5 +40,12 @@ public class Ball extends MovingElement {
     @Override
     public void dispose() {
         ball_image.dispose();
+    }
+
+    public void reset(Size size) {
+        this.position.x = size.width / 2;
+        this.position.y = size.height / 2;
+        this.speed.vx = 0;
+        this.speed.vy = -200;
     }
 }

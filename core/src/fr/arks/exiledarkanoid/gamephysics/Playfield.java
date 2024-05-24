@@ -32,7 +32,7 @@ public class Playfield {
     }
 
     public void update() {
-        ball.move();
+        ball.move(this.size);
         Iterator<Brick> iter = brickMap.getBricks().iterator();
         Vector2 ball_position = new Vector2(ball.position.x, ball.position.y);
         while (iter.hasNext()) {
@@ -76,10 +76,7 @@ public class Playfield {
 
     public void reset() {
         this.brickMap.generate();
-        ball.position.x = size.width / 2 + 5;
-        ball.position.y = size.height / 2;
-        ball.speed.vx = 0;
-        ball.speed.vy = -200;
+        this.ball.reset(size);
     }
 
     public boolean isLost() {
@@ -126,9 +123,7 @@ public class Playfield {
         batch.draw(background, 0, 0, size.width, size.height);
         ball.render(batch);
         platform.render(batch);
-        for (Brick brick : brickMap.getBricks()) {
-            brick.render(batch);
-        }
+        brickMap.render(batch);
     }
 
     public void dispose() {

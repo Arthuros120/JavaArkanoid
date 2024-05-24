@@ -1,11 +1,15 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class BrickMap {
@@ -27,7 +31,9 @@ public class BrickMap {
         assert files != null;
 
         for (File file : files) {
-            this.block_images.add(new Texture(file.getPath()));
+            if (file.isFile() && Arrays.asList("png", "jpg", "jpeg").contains(file.getName().split("\\.")[1])) {
+                this.block_images.add(new Texture(file.getPath()));
+            }
         }
 
         this.nbBricks = nbBricks;
@@ -72,7 +78,8 @@ public class BrickMap {
                         new Brick(
                                 new Position(x, y),
                                 new Size(this.brickWidth, this.brickHeight),
-                                block_images.get(rand.nextInt(block_images.size()))
+                                block_images.get(rand.nextInt(block_images.size())),
+                                new Pair<Integer, Integer>(line, column)
                         )
                 );
             }
@@ -80,9 +87,32 @@ public class BrickMap {
         }
     }
 
+    public Brick getNearestBrick(Position position) {
+        Brick nearest = null;
+        double min_distance = Double.MAX_VALUE;
+
+        for (ArrayList<Brick> row : this.bricks) {
+            for (Brick brick : row) {
+                double distance = Math.sqrt(
+                        Math.pow(brick.position.x - position.x, 2) +
+                                Math.pow(brick.position.y - position.y, 2)
+                );
+
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    nearest = brick;
+                }
+            }
+        }
+
+        return nearest;
+    }
+
+    // Retouner toutes les briques non nul autour de la brique donnée en horizontal, vertical et diagonal
+    // En se basant sur la position matricielle de la brique
     public ArrayList<Brick> getNeigborBriks(Brick bricks) {
+        // Todo: Implement this function
         assert false;
-        // Todo : implement
         return new ArrayList<>();
     }
 
@@ -96,9 +126,30 @@ public class BrickMap {
     }
 
     public void dispose() {
-        for (Texture texture : this.block_images) {
-            texture.dispose();
+        for (Brick brick : this.getBricks()) {
+            brick.dispose();
         }
+    }
+
+    public void render(SpriteBatch batch) {
+        for (ArrayList<Brick> row : this.bricks) {
+            for (Brick brick : row) {
+                brick.render(batch);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "BrickMap{" +
+                "size=" + size +
+                ", block_images=" + block_images +
+                ", nbBricks=" + nbBricks +
+                ", nbMaxBricksPerLine=" + nbMaxBricksPerLine +
+                ", brickWidth=" + brickWidth +
+                ", brickHeight=" + brickHeight +
+                ", bricks=" + bricks +
+                '}';
     }
 
 }

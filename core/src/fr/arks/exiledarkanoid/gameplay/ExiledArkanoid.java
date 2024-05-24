@@ -16,7 +16,7 @@ public class ExiledArkanoid extends Game {
     @Override
     public void create() {
         Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
-        Gdx.graphics.setResizable(true);
+        Gdx.graphics.setResizable(false);
 
         batch = new SpriteBatch();
         gameScreen = new GameScreen(this);
