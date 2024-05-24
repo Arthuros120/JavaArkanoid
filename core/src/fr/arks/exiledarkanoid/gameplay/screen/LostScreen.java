@@ -42,7 +42,7 @@ public class LostScreen implements Screen {
         font.draw(game.batch, "Score: " + game.gameScreen.playfield.score, 100, (float) game.getHeight() / 2 - 100);
         game.batch.end();
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             game.gameScreen.playfield.reset();
             game.setScreen(game.gameScreen);
             dispose();
