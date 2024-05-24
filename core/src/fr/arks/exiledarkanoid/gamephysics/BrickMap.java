@@ -2,14 +2,14 @@ package fr.arks.exiledarkanoid.gamephysics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
+import fr.arks.exiledarkanoid.gamephysics.bonus.BonusBrick;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class BrickMap {
     private final Size size;
@@ -22,6 +22,8 @@ public class BrickMap {
 
     private ArrayList<ArrayList<Brick>> bricks;
 
+    public boolean noCollision = false;
+
     public BrickMap(Size size, int nbBricks, String pathBrick) {
         this.size = size;
         this.block_images = new ArrayList<>();
@@ -30,7 +32,7 @@ public class BrickMap {
         assert files != null;
 
         for (File file : files) {
-            if (file.isFile() && Arrays.asList("png", "jpg", "jpeg").contains(file.getName().split("\\.")[1])) {
+            if (file.isFile() && Objects.equals("png", file.getName().split("\\.")[1])) {
                 this.block_images.add(new Texture(file.getPath()));
             }
         }
@@ -39,8 +41,6 @@ public class BrickMap {
 
         this.brickWidth = size.width / this.nbMaxBricksPerLine;
         this.brickHeight = this.brickWidth / 2;
-
-        generate();
     }
 
     public ArrayList<Brick> getBricks() {
@@ -51,9 +51,10 @@ public class BrickMap {
         return bricks;
     }
 
-    public void generate() {
+    public ArrayList<ABonus> generate(int percentBonusBrick) {
         Random rand = new Random();
         this.bricks = new ArrayList<>();
+        ArrayList<ABonus> bonuses = new ArrayList<>();
 
         int nbLines = this.nbBricks / this.nbMaxBricksPerLine;
 
@@ -81,9 +82,14 @@ public class BrickMap {
                                 new Pair<>(line, column)
                         )
                 );
+                if (rand.nextInt(100) < percentBonusBrick) {
+                    bonuses.add(new BonusBrick(new Position(x, y), new Size(this.brickWidth, this.brickHeight)));
+                }
             }
             this.bricks.add(row);
         }
+
+        return bonuses;
     }
 
     public void removeBrick(Brick brick) {

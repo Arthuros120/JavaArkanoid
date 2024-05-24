@@ -1,22 +1,29 @@
 package fr.arks.exiledarkanoid.gamephysics;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import fr.arks.exiledarkanoid.gamephysics.abstracts.MovingElement;
+import fr.arks.exiledarkanoid.gamephysics.abstracts.Element;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
-import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
-public class Platform extends MovingElement {
+public class Platform extends Element {
 
-    public final Rectangle shape = new Rectangle(this.position.x, this.position.y, this.size.width, this.size.height);
-
+    public final Rectangle shape;
     private final Texture platform_image;
 
-    public Platform(Position position, Size size, Speed speed) {
-        super(position, size, speed);
+   public Platform(Position position) {
+        super(position, new Size(0, 0));
         platform_image = new Texture(Gdx.files.internal("paddle.png"));
+
+        this.size = new Size(platform_image.getWidth(), platform_image.getHeight());
+        this.shape = new Rectangle(this.position.x, this.position.y, this.size.width, this.size.height);
+    }
+
+    public void changeSize(int howManyPixels) {
+        this.size.width += howManyPixels;
+        this.shape.setSize(this.size.width, this.size.height);
     }
 
     public void update(int gameWidth) {

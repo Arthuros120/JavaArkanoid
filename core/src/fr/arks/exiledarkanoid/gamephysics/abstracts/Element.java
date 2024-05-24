@@ -1,6 +1,6 @@
 package fr.arks.exiledarkanoid.gamephysics.abstracts;
 
-import fr.arks.exiledarkanoid.gamephysics.UIComponent;
+import fr.arks.exiledarkanoid.gamephysics.interfaces.UIComponent;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
