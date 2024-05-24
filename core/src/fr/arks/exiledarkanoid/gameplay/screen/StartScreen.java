@@ -21,12 +21,14 @@ public class StartScreen implements Screen {
 
     ImageButton playButton;
     private final Texture background;
+    private final Texture arkanoid_logo;
 
     OrthographicCamera camera;
 
     public StartScreen(final ExiledArkanoid game) {
         this.game = game;
         this.background = new Texture(Gdx.files.internal("background.png"));
+        this.arkanoid_logo = new Texture(Gdx.files.internal("arkanoid_logo.png"));
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.getWidth(), game.getHeight());
@@ -36,7 +38,7 @@ public class StartScreen implements Screen {
         TextureRegionDrawable playTexRegionDrawable = new TextureRegionDrawable(playTextureRegion);
         playButton = new ImageButton(playTexRegionDrawable);
         playButton.setPosition((float) game.getWidth() / 2 - playButton.getWidth() / 2, (float) game.getHeight() / 2 - playButton.getHeight() / 2);
-        playButton.addListener(v -> changeToGameScreen(v));
+        playButton.addListener(this::changeToGameScreen);
         stage = new Stage(new ScreenViewport());
         stage.addActor(playButton);
         Gdx.input.setInputProcessor(stage);
@@ -59,6 +61,7 @@ public class StartScreen implements Screen {
     public void render(float delta) {
         game.batch.begin();
         game.batch.draw(background, 0, 0, ExiledArkanoid.WIDTH, ExiledArkanoid.HEIGHT);
+        game.batch.draw(arkanoid_logo, 40, 600, 320, 100);
         game.batch.end();
         stage.draw();
     }
