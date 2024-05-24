@@ -22,16 +22,16 @@ public class Playfield {
     private final Platform platform;
     private final BrickMap brickMap;
 
-    private int nbLife;
-    private int countdown_next_bonus = new Random().nextInt(1000, 2000);
-    private ArrayList<ABonus> bonuses;
-    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
-    private String bonusText = "No bonus active";
-    private int bonusTextTime = 0;
-    private final int timeBonus = 5000;
-    private boolean platformIsTouched = false;
+    private final int DEFAULT_TIME_BONUS = 500;
+    private final int percentBonusBrick = 20;
 
-    private final int percentBonusBrick = 80;
+    private int nbLife;
+
+    private ArrayList<ABonus> bonuses;
+    private int countdownNextBonus = new Random().nextInt(1000, 2000);
+    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
+
+    private boolean platformIsTouched = false;
 
     public int score;
 
@@ -73,14 +73,16 @@ public class Playfield {
     public void reset() {
         this.nbLife = 3;
         this.score = 0;
-        this.countdown_next_bonus = new Random().nextInt(1000, 2000);
+        this.countdownNextBonus = new Random().nextInt(1000, 2000);
         this.bonuses = this.brickMap.generate(this.percentBonusBrick);
         this.ball.reset(size);
     }
 
     private void lifetimeBonus() {
         if (!this.bonusEffectsActived.isEmpty()) {
+
             ArrayList<Pair<EBonusEffect, Integer>> toRemove = new ArrayList<>();
+
             for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
                 if (bonusEffect.first == EBonusEffect.NO_BLOCK_COLLISION) {
                     if (bonusEffect.second < this.score && this.platformIsTouched) {
@@ -90,9 +92,15 @@ public class Playfield {
                 } else if (bonusEffect.second > 0) {
                     bonusEffect.second--;
                 } else {
-                    // to implement
+                    if (bonusEffect.first == EBonusEffect.PLATFORM_ENLARGE) {
+                        this.platform.changeSize(-50);
+                    } else if (bonusEffect.first == EBonusEffect.PLATFORM_SHRINK) {
+                        this.platform.changeSize(50);
+                    }
+                    toRemove.add(bonusEffect);
                 }
             }
+
             for (Pair<EBonusEffect, Integer> bonusEffect : toRemove) {
                 this.bonusEffectsActived.remove(bonusEffect);
             }
@@ -104,8 +112,19 @@ public class Playfield {
             this.brickMap.noCollision = true;
             this.bonusEffectsActived.add(new Pair<>(EBonusEffect.NO_BLOCK_COLLISION, this.score));
             System.out.println(this.score);
+        } else if (effect == EBonusEffect.PLATFORM_ENLARGE) {
+            this.platform.changeSize(50);
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, this.DEFAULT_TIME_BONUS));
+        }  else if (effect == EBonusEffect.PLATFORM_SHRINK) {
+            this.platform.changeSize(-50);
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, this.DEFAULT_TIME_BONUS));
+        } else if (effect == EBonusEffect.SCORE_BONUS) {
+            this.score += 10;
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.SCORE_BONUS, 100));
+        } else if (effect == EBonusEffect.LIFE_BONUS) {
+            this.nbLife++;
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.LIFE_BONUS, 100));
         }
-        this.bonusText = effect.toString();
     }
 
     private void bonusCollision() {
@@ -130,11 +149,11 @@ public class Playfield {
     }
 
     private void spawnBonus() {
-        if (countdown_next_bonus > 0) {
-            countdown_next_bonus--;
+        if (this.countdownNextBonus > 0) {
+            this.countdownNextBonus--;
         } else {
-            bonuses.add(new BonusDrop(new Position((int) (Math.random() * size.width - 15), size.height)));
-            countdown_next_bonus = new Random().nextInt(1000, 2000);
+            this.bonuses.add(new BonusDrop(new Position((int) (Math.random() * size.width - 15), size.height)));
+            this.countdownNextBonus = new Random().nextInt(1000, 2000);
         }
     }
 
@@ -158,7 +177,7 @@ public class Playfield {
 
     private void drawBonusInfo(SpriteBatch batch) {
         for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
-            font.draw(batch, bonusEffect.first.toString(), 100, 100 + 25 * this.bonusEffectsActived.indexOf(bonusEffect));
+            font.draw(batch, bonusEffect.first.toString() + " " + bonusEffect.second, 100, 100 + 25 * this.bonusEffectsActived.indexOf(bonusEffect));
         }
     }
 

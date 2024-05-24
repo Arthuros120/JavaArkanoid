@@ -22,6 +22,11 @@ public class Platform extends Element {
         this.shape = new Rectangle(this.position.x, this.position.y, this.size.width, this.size.height);
     }
 
+    public void changeSize(int howManyPixels) {
+        this.size.width += howManyPixels;
+        this.shape.setSize(this.size.width, this.size.height);
+    }
+
     public void update(int gameWidth) {
         if (Gdx.input.isTouched()) {
             if (Gdx.input.getX() >= (float) this.size.width / 2.0 && Gdx.input.getX() <= gameWidth - (float) this.size.width / 2.0) {
