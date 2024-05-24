@@ -34,7 +34,7 @@ public class Ball extends MovingElement {
         this.position.y += (int) (this.speed.vy * Gdx.graphics.getDeltaTime());
     }
 
-    public int collideWith(BrickMap brickMap) {
+    public int collideWith(BrickMap brickMap, boolean noCollision) {
         Iterator<Brick> iter = brickMap.getBricks().iterator();
         Vector2 ball_position = new Vector2(this.position.x, this.position.y);
         while (iter.hasNext()) {
@@ -45,19 +45,19 @@ public class Ball extends MovingElement {
                 if (ball_direction_x && ball_direction_y) {
                     Vector2 A = new Vector2(brick.position.x, brick.position.y);
                     Vector2 B = new Vector2(brick.position.x + brick.size.height, brick.position.y + brick.size.height);
-                    this.bound(A, B, ball_position, true);
+                    this.bound(A, B, ball_position, true, noCollision);
                 } else if (ball_direction_x) {
                     Vector2 A = new Vector2(brick.position.x, brick.position.y + brick.size.height);
                     Vector2 B = new Vector2(brick.position.x + brick.size.height, brick.position.y);
-                    this.bound(A, B, ball_position, false);
+                    this.bound(A, B, ball_position, false, noCollision);
                 } else if (ball_direction_y) {
                     Vector2 A = new Vector2(brick.position.x + brick.size.width - brick.size.height, brick.position.y + brick.size.height);
                     Vector2 B = new Vector2(brick.position.x + brick.size.width, brick.position.y);
-                    this.bound(A, B, ball_position, true);
+                    this.bound(A, B, ball_position, true, noCollision);
                 } else {
                     Vector2 A = new Vector2(brick.position.x + brick.size.width - brick.size.height, brick.position.y);
                     Vector2 B = new Vector2(brick.position.x + brick.size.width, brick.position.y + brick.size.height);
-                    this.bound(A, B, ball_position, false);
+                    this.bound(A, B, ball_position, false, noCollision);
                 }
                 brickMap.removeBrick(brick);
                 return 1;
@@ -66,11 +66,13 @@ public class Ball extends MovingElement {
         return 0;
     }
 
-    public void collideWith(Platform platform) {
+    public boolean collideWith(Platform platform) {
         if (this.position.x >= platform.position.x - this.size.width / 2 && this.position.x <= platform.position.x + platform.size.width && this.position.y <= platform.position.y + platform.size.height) {
-            this.speed.vy = - this.speed.vy + 10;
+            this.speed.vy = -this.speed.vy + 10;
             this.speed.vx += (int) (100 * (((float) (this.position.x - platform.position.x) / (float) platform.size.width) - 0.5));
+            return true;
         }
+        return false;
     }
 
     public void collideWith(Size mapSize) {
@@ -82,23 +84,25 @@ public class Ball extends MovingElement {
         }
     }
 
-    private void bound(Vector2 A, Vector2 B, Vector2 ball_position, boolean ball_direction_y) {
-        int position_relative = positionRelative(A, B, ball_position);
-        if (position_relative == 0) {
-            this.speed.vx = -this.speed.vx;
-            this.speed.vy = -this.speed.vy;
-        } else {
-            if (ball_direction_y) {
-                if (position_relative == 1) {
-                    this.speed.vx = -this.speed.vx;
-                } else {
-                    this.speed.vy = -this.speed.vy;
-                }
+    private void bound(Vector2 A, Vector2 B, Vector2 ball_position, boolean ball_direction_y, boolean noCollision) {
+        if (!noCollision) {
+            int position_relative = positionRelative(A, B, ball_position);
+            if (position_relative == 0) {
+                this.speed.vx = -this.speed.vx;
+                this.speed.vy = -this.speed.vy;
             } else {
-                if (position_relative == 1) {
-                    this.speed.vy = -this.speed.vy;
+                if (ball_direction_y) {
+                    if (position_relative == 1) {
+                        this.speed.vx = -this.speed.vx;
+                    } else {
+                        this.speed.vy = -this.speed.vy;
+                    }
                 } else {
-                    this.speed.vx = -this.speed.vx;
+                    if (position_relative == 1) {
+                        this.speed.vy = -this.speed.vy;
+                    } else {
+                        this.speed.vx = -this.speed.vx;
+                    }
                 }
             }
         }

@@ -7,13 +7,13 @@ import fr.arks.exiledarkanoid.gamephysics.Platform;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 
-public class BonusBrick extends Bonus {
+public class BonusBrick extends ABonus {
 
     public boolean isTouched = false;
 
     public BonusBrick(Position position, Size size) {
         super(position, "bonus_brick");
-        this.shape.setSize(size.width, size.height);
+        this.shape.setSize(size.width - 15, size.height - 15);
     }
 
     @Override
@@ -24,11 +24,11 @@ public class BonusBrick extends Bonus {
     }
 
     @Override
-    public boolean isTouched(Platform platform, Ball ball) {
+    public boolean isTouched(Platform platform, Ball ball, boolean noCollision) {
         if (this.shape.overlaps(platform.shape) && isTouched) {
             return true;
         }
-        if (this.shape.overlaps(new Rectangle(ball.position.x, ball.position.y, ball.size.width, ball.size.height)) && !isTouched) {
+        if (this.shape.overlaps(new Rectangle(ball.position.x, ball.position.y, ball.size.width, ball.size.height)) && !isTouched && !noCollision) {
             isTouched = true;
             this.size.width = this.textures[0].getWidth();
             this.size.height = this.textures[0].getHeight();

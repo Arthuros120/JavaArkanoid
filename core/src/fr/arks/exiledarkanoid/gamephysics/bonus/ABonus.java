@@ -10,31 +10,28 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
 
-public abstract class Bonus extends AnimatedMovingElement {
+public abstract class ABonus extends AnimatedMovingElement {
 
     public final Rectangle shape;
+    public final EBonusEffect effect;
 
-    public Bonus(Position position, String pathAsset) {
-        super(position, new Size(0, 0), new Speed(0, -200), "bonus/" + pathAsset);
+    public ABonus(Position position, String pathAsset) {
+        super(position, new Size(0, 0), new Speed(0, -300), "bonus/" + pathAsset);
 
         this.size.width = this.textures[0].getWidth();
         this.size.height = this.textures[0].getHeight();
 
         this.shape = new Rectangle(this.position.x, this.position.y, this.size.width, this.size.height);
+
+        this.effect = EBonusEffect.values()[(int) (Math.random() * EBonusEffect.values().length)];
     }
 
     public void move() {
         this.position.y += (int) (this.speed.vy * Gdx.graphics.getDeltaTime());
     }
 
-    public boolean isTouched(Platform platform, Ball ball) {
+    public boolean isTouched(Platform platform, Ball ball, boolean noCollision) {
         return this.shape.overlaps(platform.shape);
-    }
-
-    public void apply() {
-        // To be implemented in child classes
-        // Todo: a faire
-        System.out.println("Apply bonus");
     }
 
     @Override

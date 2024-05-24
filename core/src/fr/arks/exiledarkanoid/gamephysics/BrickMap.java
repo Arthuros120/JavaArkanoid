@@ -2,7 +2,7 @@ package fr.arks.exiledarkanoid.gamephysics;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import fr.arks.exiledarkanoid.gamephysics.bonus.Bonus;
+import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
 import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
@@ -21,6 +21,8 @@ public class BrickMap {
     private final int brickHeight;
 
     private ArrayList<ArrayList<Brick>> bricks;
+
+    public boolean noCollision = false;
 
     public BrickMap(Size size, int nbBricks, String pathBrick) {
         this.size = size;
@@ -49,10 +51,10 @@ public class BrickMap {
         return bricks;
     }
 
-    public ArrayList<Bonus> generate(int percentBonusBrick) {
+    public ArrayList<ABonus> generate(int percentBonusBrick) {
         Random rand = new Random();
         this.bricks = new ArrayList<>();
-        ArrayList<Bonus> bonuses = new ArrayList<>();
+        ArrayList<ABonus> bonuses = new ArrayList<>();
 
         int nbLines = this.nbBricks / this.nbMaxBricksPerLine;
 
