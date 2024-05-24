@@ -71,6 +71,6 @@ public class LostScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        font.dispose();
     }
 }

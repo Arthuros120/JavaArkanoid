@@ -37,7 +37,7 @@ public class WinScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        font.draw(game.batch, "YOU WON!!! ", 100, (float) game.getHeight() / 2);
+        font.draw(game.batch, "YOU WON !!! ", 100, (float) game.getHeight() / 2);
         font.draw(game.batch, "Tap anywhere to restart!", 100, (float) game.getHeight() / 2 - 50);
         font.draw(game.batch, "Score: " + game.gameScreen.playfield.score, 100, (float) game.getHeight() / 2 - 100);
         game.batch.end();
@@ -71,6 +71,6 @@ public class WinScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        font.dispose();
     }
 }
