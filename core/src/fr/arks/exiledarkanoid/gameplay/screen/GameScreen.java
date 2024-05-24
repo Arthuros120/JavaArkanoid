@@ -9,6 +9,10 @@ import fr.arks.exiledarkanoid.gamephysics.Playfield;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import fr.arks.exiledarkanoid.gameplay.ExiledArkanoid;
 
+/**
+ * The game screen
+ * This screen is where the game is played
+ */
 public class GameScreen implements Screen {
 
     public final Playfield playfield;
@@ -35,6 +39,10 @@ public class GameScreen implements Screen {
 
     }
 
+    /**
+     * Render the game screen and check if the game is finished
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         playfield.update();

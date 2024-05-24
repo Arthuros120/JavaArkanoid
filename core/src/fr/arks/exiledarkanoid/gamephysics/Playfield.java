@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+/**
+ * The board where the game is played
+ * It contains the ball, the platform, the bricks and the bonuses
+ */
 public class Playfield {
     private final Texture background;
     private final Size size;
@@ -55,6 +59,9 @@ public class Playfield {
         this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
     }
 
+    /**
+     * this function is called for each frame and modify the state of all the elements of the board like position or size
+     */
     public void update() {
 
         this.spawnBonus();
@@ -73,6 +80,9 @@ public class Playfield {
         this.checkLifeLost();
     }
 
+    /**
+     * Reset the board to its initial state
+     */
     public void reset() {
         this.nbLife = 3;
         this.score = 0;
@@ -161,15 +171,26 @@ public class Playfield {
         }
     }
 
+    /**
+     * Check if the player has lost
+     * @return true if the player has lost, false otherwise
+     */
     public boolean isLost() {
         return nbLife <= 0;
     }
 
+    /**
+     * check if the player lost a life and reset the ball position
+     */
     private void checkLifeLost() {
         if (ball.position.y <= platform.position.y) {
             nbLife--;
             this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
         }
+    }
+
+    public boolean isWon() {
+        return brickMap.getBricks().isEmpty();
     }
 
     private void drawLife(SpriteBatch batch) {
@@ -185,6 +206,10 @@ public class Playfield {
         }
     }
 
+    /**
+     * this function is called for each frame and draw all the elements of the board
+     * @param batch the batch where the elements are drawn
+     */
     public void render(SpriteBatch batch) {
         batch.draw(background, 0, 0, size.width, size.height);
         ball.render(batch);
@@ -216,9 +241,5 @@ public class Playfield {
         for (ABonus bonus : bonuses) {
             bonus.dispose();
         }
-    }
-
-    public boolean isWon() {
-        return brickMap.getBricks().isEmpty();
     }
 }

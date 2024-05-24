@@ -13,7 +13,7 @@ public class Platform extends Element {
     public final Rectangle shape;
     private final Texture platform_image;
 
-   public Platform(Position position) {
+    public Platform(Position position) {
         super(position, new Size(0, 0));
         platform_image = new Texture(Gdx.files.internal("paddle.png"));
 
@@ -21,6 +21,10 @@ public class Platform extends Element {
         this.shape = new Rectangle(this.position.x, this.position.y, this.size.width, this.size.height);
     }
 
+    /**
+     * Change the size of the platform when the player takes a shrink or enlarge bonus
+     * @param howManyPixels the number of pixels to add or remove to the platforms width
+     */
     public void changeSize(int howManyPixels) {
         this.size.width += howManyPixels;
         this.shape.setSize(this.size.width, this.size.height);

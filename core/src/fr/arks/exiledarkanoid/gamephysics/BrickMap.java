@@ -11,6 +11,9 @@ import fr.arks.exiledarkanoid.gamephysics.bonus.BonusBrick;
 import java.io.File;
 import java.util.*;
 
+/**
+ * It contains all the bricks of the game
+ */
 public class BrickMap {
     private final Size size;
     private final ArrayList<Texture> block_images;
@@ -43,6 +46,10 @@ public class BrickMap {
         this.brickHeight = this.brickWidth / 2;
     }
 
+    /**
+     * Get all the bricks of the game
+     * @return the list of all the bricks
+     */
     public ArrayList<Brick> getBricks() {
         ArrayList<Brick> bricks = new ArrayList<>();
         for (ArrayList<Brick> brick : this.bricks) {
@@ -51,6 +58,11 @@ public class BrickMap {
         return bricks;
     }
 
+    /**
+     * Generate the bricks of the game with a bonus on some of them
+     * @param percentBonusBrick the percentage of bricks that will have a bonus
+     * @return the list of bonuses
+     */
     public ArrayList<ABonus> generate(int percentBonusBrick) {
         Random rand = new Random();
         this.bricks = new ArrayList<>();
