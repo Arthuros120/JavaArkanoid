@@ -1,86 +1,277 @@
 package fr.arks.exiledarkanoid.gamephysics;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import fr.arks.exiledarkanoid.gamephysics.bases.Pair;
+import fr.arks.exiledarkanoid.gamephysics.bases.Position;
+import fr.arks.exiledarkanoid.gamephysics.bases.Size;
+import fr.arks.exiledarkanoid.gamephysics.bases.Speed;
+import fr.arks.exiledarkanoid.gamephysics.bonus.ABonus;
+import fr.arks.exiledarkanoid.gamephysics.bonus.BonusDrop;
+import fr.arks.exiledarkanoid.gamephysics.bonus.EBonusEffect;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
+/**
+ * Playfield class
+ * <p>
+ * The board where the game is played
+ * It contains the ball, the platform, the bricks and the bonuses
+ *
+ * @see Size
+ */
 public class Playfield {
-    private int nbBricks;
-    private Size size;
-    private Ball ball;
-    private Platform platform;
-    private ArrayList<Brick> bricks;
+    private final Texture background;
+    private final Size size;
+    private final Ball ball;
+    private final Platform platform;
+    private final BrickMap brickMap;
+    private final ArrayList<BrickExplosion> brickExplosions;
 
+    private final int BALL_SPEED = 400;
+    private final int PERCENT_BONUS_BRICK = 20;
+    private final ArrayList<Pair<EBonusEffect, Integer>> bonusEffectsActived = new ArrayList<>();
+    public int score;
+    public BitmapFont font;
+    private int nbLife;
+    private ArrayList<ABonus> bonuses;
+    private int countdownNextBonus = new Random().nextInt(1000, 2000);
+    private boolean platformIsTouched = false;
+
+    /**
+     * Constructor
+     *
+     * @param size     The size of the board
+     * @param nbBricks The number of bricks
+     */
     public Playfield(Size size, int nbBricks) {
-        this.nbBricks = nbBricks;
         this.size = size;
-        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Size(10, 10), new Speed(4, 4));
-        this.platform = new Platform(new Position(size.width / 2, 50), new Size(80, 20), new Speed(1, 0));
+        this.ball = new Ball(new Position(size.width / 2, size.height / 2), new Speed(this.BALL_SPEED, this.BALL_SPEED));
+        this.platform = new Platform(new Position(size.width / 2, 50));
+        this.nbLife = 3;
+        this.score = 0;
 
-        this.bricks = new ArrayList<>();
+        this.background = new Texture(Gdx.files.internal("background.png"));
+        this.brickMap = new BrickMap(size, nbBricks, "bricks");
+        this.brickExplosions = new ArrayList<>();
 
-        int brickWidth = size.width / 10;
-        int brickHeight = size.height / 20;
+        this.font = new BitmapFont();
 
-        for (int i = 0; i < nbBricks; i++) {
-            int x = (i % 10) * brickWidth;
-            int y = size.height - (i / 10) * brickHeight;
-
-            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
-        }
-
+        this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
     }
 
+    /**
+     * this function is called for each frame and modify the state of all the elements of the board like position or size
+     */
     public void update() {
+
+        this.spawnBonus();
+
+        if (ball.position.y < platform.position.y + platform.size.height + 100) {
+            platformIsTouched = ball.collideWith(platform);
+        }
+        score += ball.collideWith(brickMap, this.brickExplosions, this.brickMap.noCollision);
+        ball.collideWith(size);
+
+        platform.update(size.width);
         ball.move();
-        Iterator<Brick> iter = bricks.iterator();
-        while (iter.hasNext()) {
-            Brick brick = iter.next();
-            if (ball.position.x >= brick.position.x && ball.position.x <= brick.position.x + brick.size.width && (ball.position.y >= brick.position.y - ball.size.width || (ball.position.y <= brick.position.y + brick.size.height + ball.size.width && ball.position.y >= brick.position.y + brick.size.height))) {
-                ball.speed.vy = -ball.speed.vy;
-                iter.remove();
-                break;
-            } else if (ball.position.y >= brick.position.y && ball.position.y <= brick.position.y + brick.size.height && (ball.position.x >= brick.position.x - ball.size.width || (ball.position.x <= brick.position.x + brick.size.width + ball.size.height && ball.position.x >= brick.position.x + brick.size.width))) {
-                ball.speed.vx = -ball.speed.vx;
-                iter.remove();
-                break;
+
+        this.bonusCollision();
+        this.lifetimeBonus();
+        this.checkLifeLost();
+    }
+
+    /**
+     * Reset the board to its initial state
+     */
+    public void reset() {
+        this.nbLife = 3;
+        this.score = 0;
+        this.countdownNextBonus = new Random().nextInt(1000, 2000);
+        this.bonuses = this.brickMap.generate(this.PERCENT_BONUS_BRICK);
+        this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
+    }
+
+    /**
+     * LifeCycle of the bonus effects
+     */
+    private void lifetimeBonus() {
+        if (!this.bonusEffectsActived.isEmpty()) {
+
+            ArrayList<Pair<EBonusEffect, Integer>> toRemove = new ArrayList<>();
+
+            for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
+                if (bonusEffect.first == EBonusEffect.NO_BLOCK_COLLISION) {
+                    if (bonusEffect.second < this.score && this.platformIsTouched) {
+                        this.brickMap.noCollision = false;
+                        toRemove.add(bonusEffect);
+                    }
+                } else if (bonusEffect.second > 0) {
+                    bonusEffect.second--;
+                } else {
+                    if (bonusEffect.first == EBonusEffect.PLATFORM_ENLARGE) {
+                        this.platform.changeSize(-50);
+                    } else if (bonusEffect.first == EBonusEffect.PLATFORM_SHRINK) {
+                        this.platform.changeSize(50);
+                    }
+                    toRemove.add(bonusEffect);
+                }
+            }
+
+            for (Pair<EBonusEffect, Integer> bonusEffect : toRemove) {
+                this.bonusEffectsActived.remove(bonusEffect);
             }
         }
-        if (ball.position.x >= platform.position.x && ball.position.x <= platform.position.x + platform.size.width && ball.position.y <= platform.position.y + platform.size.height + ball.size.width) {
-            ball.speed.vy = -ball.speed.vy;
-            ball.speed.vx += (2 * (ball.position.x - platform.position.x) / platform.size.width) - 1;
+    }
+
+    /**
+     * Launch a bonus effect
+     *
+     * @param effect the effect to launch
+     */
+    private void launchBonus(EBonusEffect effect) {
+        int DEFAULT_TIME_BONUS = 500;
+        if (effect == EBonusEffect.NO_BLOCK_COLLISION) {
+            this.brickMap.noCollision = true;
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.NO_BLOCK_COLLISION, this.score));
+            System.out.println(this.score);
+        } else if (effect == EBonusEffect.PLATFORM_ENLARGE) {
+            this.platform.changeSize(50);
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_ENLARGE, DEFAULT_TIME_BONUS));
+        } else if (effect == EBonusEffect.PLATFORM_SHRINK) {
+            this.platform.changeSize(-50);
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.PLATFORM_SHRINK, DEFAULT_TIME_BONUS));
+        } else if (effect == EBonusEffect.SCORE_BONUS) {
+            this.score += 10;
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.SCORE_BONUS, 100));
+        } else if (effect == EBonusEffect.LIFE_BONUS) {
+            this.nbLife++;
+            this.bonusEffectsActived.add(new Pair<>(EBonusEffect.LIFE_BONUS, 100));
         }
     }
 
-    public void reset() {
-        this.bricks = new ArrayList<>();
-        int brickWidth = size.width / 10;
-        int brickHeight = size.height / 20;
-        for (int i = 0; i < nbBricks; i++) {
-            int x = (i % 10) * brickWidth;
-            int y = size.height - (i / 10) * brickHeight;
+    /**
+     * Check if the ball collide with a bonus
+     */
+    private void bonusCollision() {
+        ArrayList<ABonus> toRemove = new ArrayList<>();
 
-            bricks.add(new Brick(new Position(x, y - brickHeight), new Size(brickWidth - 2, brickHeight - 2)));
+        if (!this.bonuses.isEmpty()) {
+            for (ABonus bonus : bonuses) {
+                if (bonus.isTouched(platform, ball, this.brickMap.noCollision)) {
+                    launchBonus(bonus.effect);
+                    toRemove.add(bonus);
+                }
+                if (bonus.position.y < 0) {
+                    toRemove.add(bonus);
+                }
+                bonus.move();
+            }
         }
 
-        ball.position.x = size.width / 2;
-        ball.position.y = size.height / 2;
-        ball.speed.vx = 4;
-        ball.speed.vy = 4;
+        for (ABonus bonus : toRemove) {
+            bonuses.remove(bonus);
+        }
     }
 
+    private void spawnBonus() {
+        if (this.countdownNextBonus > 0) {
+            this.countdownNextBonus--;
+        } else {
+            this.bonuses.add(new BonusDrop(new Position((int) (Math.random() * size.width - 15), size.height)));
+            this.countdownNextBonus = new Random().nextInt(1000, 2000);
+        }
+    }
+
+    /**
+     * Check if the player has lost
+     *
+     * @return true if the player has lost, false otherwise
+     */
     public boolean isLost() {
-        return ball.position.y < platform.position.y;
+        return nbLife <= 0;
     }
 
-    public Ball getBall() {
-        return ball;
+    /**
+     * check if the player lost a life and reset the ball position
+     */
+    private void checkLifeLost() {
+        if (ball.position.y <= platform.position.y) {
+            nbLife--;
+            this.ball.reset(size, new Speed(this.BALL_SPEED, this.BALL_SPEED));
+        }
     }
 
-    public Platform getPlatform() {
-        return platform;
+    /**
+     * Check if the player has won
+     *
+     * @return true if the player has won, false otherwise
+     */
+    public boolean isWon() {
+        return brickMap.getBricks().isEmpty();
     }
 
-    public ArrayList<Brick> getBricks() {
-        return bricks;
+    /**
+     * Draw the life and the score of the player
+     *
+     * @param batch the batch where the elements are drawn
+     */
+    private void drawLife(SpriteBatch batch) {
+        for (int i = 0; i < nbLife; i++) {
+            batch.draw(ball.ball_image, size.width - 30 - i * 30, 25, ball.ball_image.getWidth(), ball.ball_image.getHeight());
+        }
+        font.draw(batch, "Score: " + score, 10, 25);
+    }
+
+    /**
+     * Draw the bonus effects actived
+     *
+     * @param batch the batch where the elements are drawn
+     */
+    private void drawBonusInfo(SpriteBatch batch) {
+        for (Pair<EBonusEffect, Integer> bonusEffect : this.bonusEffectsActived) {
+            font.draw(batch, bonusEffect.first.toString() + " " + bonusEffect.second, 100, 100 + 25 * this.bonusEffectsActived.indexOf(bonusEffect));
+        }
+    }
+
+    /**
+     * this function is called for each frame and draw all the elements of the board
+     *
+     * @param batch the batch where the elements are drawn
+     */
+    public void render(SpriteBatch batch) {
+        batch.draw(background, 0, 0, size.width, size.height);
+        ball.render(batch);
+        platform.render(batch);
+        brickMap.render(batch);
+        Iterator<BrickExplosion> iter = brickExplosions.iterator();
+        while (iter.hasNext()) {
+            BrickExplosion brickExplosion = iter.next();
+            if (!brickExplosion.isFinished()) {
+                brickExplosion.render(batch);
+            } else {
+                brickExplosion.dispose();
+                iter.remove();
+            }
+        }
+        for (ABonus bonus : bonuses) {
+            bonus.render(batch);
+        }
+        this.drawLife(batch);
+        this.drawBonusInfo(batch);
+    }
+
+    public void dispose() {
+        ball.dispose();
+        platform.dispose();
+        brickMap.dispose();
+        background.dispose();
+        for (ABonus bonus : bonuses) {
+            bonus.dispose();
+        }
     }
 }
