@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
-import fr.arks.exiledarkanoid.gamephysics.abstracts.Element;
 import fr.arks.exiledarkanoid.gamephysics.abstracts.MovingElement;
 import fr.arks.exiledarkanoid.gamephysics.bases.Position;
 import fr.arks.exiledarkanoid.gamephysics.bases.Size;
@@ -18,7 +17,7 @@ public class Ball extends MovingElement {
 
     public final Circle shape = new Circle(this.position.x, this.position.y, (float) this.size.width / 2);
 
-    private final Texture ball_image;
+    public final Texture ball_image;
 
     public Ball(Position position, Size size, Speed speed) {
         super(position, size, speed);
@@ -30,7 +29,7 @@ public class Ball extends MovingElement {
         this.position.y += (int) (this.speed.vy * Gdx.graphics.getDeltaTime());
     }
 
-    public void collideWith(BrickMap brickMap) {
+    public int collideWith(BrickMap brickMap) {
         Iterator<Brick> iter = brickMap.getBricks().iterator();
         Vector2 ball_position = new Vector2(this.position.x, this.position.y);
         while (iter.hasNext()) {
@@ -56,9 +55,10 @@ public class Ball extends MovingElement {
                     this.bound(A, B, ball_position, false);
                 }
                 brickMap.removeBrick(brick);
-                break;
+                return 1;
             }
         }
+        return 0;
     }
 
     public void collideWith(Platform platform) {
