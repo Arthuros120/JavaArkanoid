@@ -9,7 +9,6 @@ import fr.arks.exiledarkanoid.gamephysics.bases.Size;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Random;
 
 public class BrickMap {
@@ -85,35 +84,6 @@ public class BrickMap {
             }
             this.bricks.add(row);
         }
-    }
-
-    public Brick getNearestBrick(Position position) {
-        Brick nearest = null;
-        double min_distance = Double.MAX_VALUE;
-
-        for (ArrayList<Brick> row : this.bricks) {
-            for (Brick brick : row) {
-                double distance = Math.sqrt(
-                        Math.pow(brick.position.x - position.x, 2) +
-                                Math.pow(brick.position.y - position.y, 2)
-                );
-
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    nearest = brick;
-                }
-            }
-        }
-
-        return nearest;
-    }
-
-    // Retouner toutes les briques non nul autour de la brique donnée en horizontal, vertical et diagonal
-    // En se basant sur la position matricielle de la brique
-    public ArrayList<Brick> getNeigborBriks(Brick bricks) {
-        // Todo: Implement this function
-        assert false;
-        return new ArrayList<>();
     }
 
     public void removeBrick(Brick brick) {
