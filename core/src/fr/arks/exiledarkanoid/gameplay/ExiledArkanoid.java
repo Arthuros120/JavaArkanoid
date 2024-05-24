@@ -4,14 +4,16 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.arks.exiledarkanoid.gameplay.screen.GameScreen;
-import fr.arks.exiledarkanoid.gameplay.screen.LostScreen;
+import fr.arks.exiledarkanoid.gameplay.screen.StartScreen;
 
 public class ExiledArkanoid extends Game {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 800;
 
     public SpriteBatch batch;
+
     public GameScreen gameScreen;
+    public StartScreen startScreen;
 
     @Override
     public void create() {
@@ -20,15 +22,13 @@ public class ExiledArkanoid extends Game {
 
         batch = new SpriteBatch();
         gameScreen = new GameScreen(this);
-        this.setScreen(gameScreen);
+        startScreen = new StartScreen(this);
+        this.setScreen(startScreen);
     }
 
     @Override
     public void render() {
         super.render();
-        if (gameScreen.playfield.isLost()) {
-            this.setScreen(new LostScreen(this));
-        }
     }
 
     @Override

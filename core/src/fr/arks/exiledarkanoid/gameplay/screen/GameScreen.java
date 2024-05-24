@@ -48,6 +48,9 @@ public class GameScreen implements Screen {
         playfield.render(game.batch);
 
         game.batch.end();
+        if (this.playfield.isLost()) {
+            game.setScreen(new LostScreen(game));
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ public class BrickMap {
     private final ArrayList<Texture> block_images;
 
     private final int nbBricks;
-    private final int nbMaxBricksPerLine = 10;
+    private final int nbMaxBricksPerLine = 8;
     private final int brickWidth;
     private final int brickHeight;
 
@@ -38,7 +38,7 @@ public class BrickMap {
         this.nbBricks = nbBricks;
 
         this.brickWidth = size.width / this.nbMaxBricksPerLine;
-        this.brickHeight = size.height / 40;
+        this.brickHeight = this.brickWidth / 2;
 
         generate();
     }
@@ -78,7 +78,7 @@ public class BrickMap {
                                 new Position(x, y),
                                 new Size(this.brickWidth, this.brickHeight),
                                 block_images.get(rand.nextInt(block_images.size())),
-                                new Pair<Integer, Integer>(line, column)
+                                new Pair<>(line, column)
                         )
                 );
             }

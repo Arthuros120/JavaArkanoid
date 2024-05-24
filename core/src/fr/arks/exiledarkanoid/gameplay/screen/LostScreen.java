@@ -39,6 +39,7 @@ public class LostScreen implements Screen {
         game.batch.begin();
         font.draw(game.batch, "YOU LOSED... ", 100, (float) game.getHeight() / 2);
         font.draw(game.batch, "Tap anywhere to restart!", 100, (float) game.getHeight() / 2 - 50);
+        font.draw(game.batch, "Score: " + game.gameScreen.playfield.score, 100, (float) game.getHeight() / 2 - 100);
         game.batch.end();
 
         if (Gdx.input.isTouched()) {
@@ -70,6 +71,6 @@ public class LostScreen implements Screen {
 
     @Override
     public void dispose() {
-        font.dispose();
+
     }
 }
