@@ -136,7 +136,6 @@ public class Ball extends MovingElement {
     public void reset(Size size, Speed speed) {
         this.position.x = size.width / 2;
         this.position.y = size.height / 2;
-        this.speed.vx = 0;
-        this.speed.vy = -200;
+        this.speed = speed;
     }
 }

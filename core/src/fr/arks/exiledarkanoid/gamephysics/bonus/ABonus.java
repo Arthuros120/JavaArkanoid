@@ -16,7 +16,7 @@ public abstract class ABonus extends AnimatedMovingElement {
     public final EBonusEffect effect;
 
     public ABonus(Position position, String pathAsset) {
-        super(position, new Size(0, 0), new Speed(0, -500), "bonus/" + pathAsset);
+        super(position, new Size(0, 0), new Speed(0, -300), "bonus/" + pathAsset);
 
         this.size.width = this.textures[0].getWidth();
         this.size.height = this.textures[0].getHeight();
