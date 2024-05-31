@@ -1,5 +1,13 @@
 package fr.arks.exiledarkanoid.gamephysics.bases;
 
+/**
+ * Pair class
+ * <p>
+ * This class is used to create a pair
+ *
+ * @param <T> The first element
+ * @param <U> The second element
+ */
 public class Pair<T, U> {
     public final T first;
     public U second;
